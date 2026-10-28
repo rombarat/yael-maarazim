@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Mail, MessageCircle, Phone } from "lucide-react";
-import { FacebookIcon, InstagramIcon } from "@/components/ui/social-icons";
+import { Mail, Phone } from "lucide-react";
+import { FacebookIcon, InstagramIcon, WhatsAppIcon } from "@/components/ui/social-icons";
 import { summarizeHours } from "@/lib/pickup";
 import { telHref, whatsappHref } from "@/lib/format";
 import type { BusinessSettings } from "@/lib/types";
@@ -35,7 +35,7 @@ export function SiteFooter({ settings }: { settings: BusinessSettings }) {
                   </li>
                   <li>
                     <a href={whatsappHref(settings.phone)} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 hover:text-white">
-                      <MessageCircle className="size-4" aria-hidden="true" />
+                      <WhatsAppIcon className="size-4" />
                       וואטסאפ
                     </a>
                   </li>

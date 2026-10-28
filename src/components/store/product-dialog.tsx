@@ -2,7 +2,8 @@
 
 import { useEffect, useMemo, useRef } from "react";
 import Image from "next/image";
-import { Clock, MessageCircle, Phone, ShoppingBag, X } from "lucide-react";
+import { Clock, Phone, ShoppingBag, X } from "lucide-react";
+import { WhatsAppIcon } from "@/components/ui/social-icons";
 import { useModal } from "@/components/ui/use-modal";
 import { productIdFromUrl, syncProductDialogFromUrl, useProductDialog } from "@/lib/product-dialog";
 import { isContactOnly, productInquiry, whatsappMessageHref } from "@/lib/contact";
@@ -98,9 +99,9 @@ export function ProductDialog({ products, categories, settings }: Props) {
                       href={whatsappMessageHref(settings.phone, productInquiry(product.name))}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex h-12 items-center gap-2 rounded-full bg-brand px-6 text-[17px] font-semibold text-white transition-colors hover:bg-brand-dark"
+                      className="inline-flex h-12 items-center gap-2 rounded-full border border-line bg-white px-6 text-[17px] font-semibold transition-colors hover:border-[#25D366] hover:bg-[#25D366]/10"
                     >
-                      <MessageCircle className="size-5" strokeWidth={2} aria-hidden="true" />
+                      <WhatsAppIcon className="size-6" />
                       לתיאום בוואטסאפ
                     </a>
                     <a

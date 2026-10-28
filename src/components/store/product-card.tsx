@@ -1,8 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { MessageCircle, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { toast } from "sonner";
+import { WhatsAppIcon } from "@/components/ui/social-icons";
 import { useCart } from "@/lib/cart-store";
 import { useProductDialog } from "@/lib/product-dialog";
 import { productInquiry, whatsappMessageHref } from "@/lib/contact";
@@ -78,10 +79,10 @@ export function ProductCard({ product, contactOnly = false, phone = "", priority
               href={whatsappMessageHref(phone, productInquiry(product.name))}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex h-11 w-full items-center justify-center gap-2 rounded-full border border-brand/30 px-3 text-[16px] font-semibold text-brand transition-colors hover:bg-blush"
+              className="flex h-11 w-full items-center justify-center gap-2 rounded-full border border-line bg-white px-3 text-[16px] font-semibold text-ink transition-colors hover:border-[#25D366] hover:bg-[#25D366]/10"
               aria-label={`תיאום ${product.name} בוואטסאפ`}
             >
-              <MessageCircle className="size-[18px] shrink-0" strokeWidth={2} />
+              <WhatsAppIcon className="size-5 shrink-0" />
               לתיאום בוואטסאפ
             </a>
           )}

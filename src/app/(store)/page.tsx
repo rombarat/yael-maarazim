@@ -1,7 +1,8 @@
 import Image from "next/image";
-import { Clock, MessageCircle, Phone, Store, Truck } from "lucide-react";
+import { Clock, Phone, Store, Truck } from "lucide-react";
 import { CategoryNav } from "@/components/store/category-nav";
 import { ProductCard } from "@/components/store/product-card";
+import { WhatsAppIcon } from "@/components/ui/social-icons";
 import { getCategories, getProducts, getSettings } from "@/lib/catalog";
 import { isContactOnly, whatsappMessageHref } from "@/lib/contact";
 import { telHref } from "@/lib/format";
@@ -143,9 +144,9 @@ export default async function HomePage() {
                     href={whatsappMessageHref(settings.phone, hello)}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex h-12 items-center gap-2 rounded-full bg-brand px-6 text-[17px] font-semibold text-white transition-colors hover:bg-brand-dark"
+                    className="inline-flex h-12 items-center gap-2 rounded-full bg-white px-6 text-[17px] font-semibold transition-colors hover:bg-[#25D366]/10"
                   >
-                    <MessageCircle className="size-5" strokeWidth={2} aria-hidden="true" />
+                    <WhatsAppIcon className="size-6" />
                     כתבו לי בוואטסאפ
                   </a>
                   <a
