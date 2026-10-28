@@ -2,7 +2,7 @@
  * Database CLI.
  *   npm run db:setup                     create/upgrade tables (idempotent)
  *   npm run db:seed                      replace the catalog with seed/catalog.json (keeps orders)
- *   npm run db:add-new                   add only the categories/products the database doesn't have yet
+ *   npm run db:add-new                   add the catalog's new categories (with their products), change nothing else
  *   npm run db:reset                     catalog + wipe orders + sample orders (demo / fresh start)
  *   npm run admin:create -- <email> <password>   create the admin or reset its password
  *

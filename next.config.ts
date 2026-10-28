@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     "/api/cron/reset-demo": ["./seed/**/*"],
     "/api/setup": ["./seed/**/*", "./db/schema.sql"],
+    "/api/add-new": ["./seed/**/*"],
   },
   images: { formats: ["image/avif", "image/webp"] },
 };

@@ -116,32 +116,39 @@ export async function seedCatalog(db: Db, catalog: Catalog, { wipeOrders = false
 }
 
 /**
- * Adds categories and products from the catalog that the database doesn't have yet (matched by name).
- * Never deletes or changes anything, so the owner's edits and orders stay as they are.
+ * Adds the catalog's categories that the database doesn't have yet (matched by name), with their products.
+ * Existing categories are left alone, products included, so a product the owner renamed or deleted
+ * never comes back. Never deletes or changes anything.
  */
 export async function addMissingFromCatalog(db: Db, catalog: Catalog, { seedDir = path.join(process.cwd(), "seed") } = {}) {
   const images = new Map<string, string>();
   const categoryIds = new Map(
     (await db.query<{ id: string; name: string }>("select id::text, name from categories")).map((c) => [c.name, c.id]),
   );
-  const [{ max: maxSort }] = await db.query<{ max: number }>("select coalesce(max(sort_order), 0)::int as max from categories");
   const added = { categories: [] as string[], products: [] as string[] };
 
   for (const [i, c] of catalog.categories.entries()) {
     if (categoryIds.has(c.name)) continue;
+    // Right after the category that precedes it in the catalog; the others keep their order.
+    const before = catalog.categories.slice(0, i).map((x) => x.name).reverse().find((n) => categoryIds.has(n));
+    const [{ pos }] = await db.query<{ pos: number }>(
+      before
+        ? "select sort_order + 1 as pos from categories where name = $1"
+        : "select coalesce(min(sort_order), 1) as pos from categories where $1::text is null",
+      [before ?? null],
+    );
+    await db.query("update categories set sort_order = sort_order + 1 where sort_order >= $1", [pos]);
     const [row] = await db.query<{ id: string }>(
       "insert into categories (name, image_url, sort_order) values ($1, $2, $3) returning id::text",
-      [c.name, await storeImage(db, seedDir, c.image, images), maxSort + i + 1],
+      [c.name, await storeImage(db, seedDir, c.image, images), pos],
     );
     categoryIds.set(c.name, row.id);
     added.categories.push(c.name);
   }
 
-  const existing = new Set((await db.query<{ name: string }>("select name from products")).map((p) => p.name));
   for (const p of catalog.products) {
-    if (existing.has(p.name)) continue;
-    const categoryId = categoryIds.get(p.category);
-    if (!categoryId) throw new Error(`Product "${p.name}": unknown category "${p.category}"`);
+    if (!added.categories.includes(p.category)) continue;
+    const categoryId = categoryIds.get(p.category)!;
     await db.query(
       `insert into products (category_id, name, description, price, unit_label, image_url, is_available, is_featured, tags, variants, sort_order)
        values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10::jsonb,
