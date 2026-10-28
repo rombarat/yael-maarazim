@@ -1,25 +1,30 @@
+import type { Lang } from "@/i18n";
 import type { Product } from "./types";
 
-const ils = new Intl.NumberFormat("he-IL", {
-  style: "currency",
-  currency: "ILS",
-  maximumFractionDigits: 2,
-  minimumFractionDigits: 0,
-});
+/** Storefront functions take the language (default Hebrew); the admin always calls them without it. */
+const LOCALE: Record<Lang, string> = { he: "he-IL", en: "en-IL" };
 
-export function formatPrice(value: number) {
-  return ils.format(Number(value));
+const ils = Object.fromEntries(
+  (["he", "en"] as const).map((lang) => [
+    lang,
+    new Intl.NumberFormat(LOCALE[lang], { style: "currency", currency: "ILS", maximumFractionDigits: 2, minimumFractionDigits: 0 }),
+  ]),
+) as Record<Lang, Intl.NumberFormat>;
+
+export function formatPrice(value: number, lang: Lang = "he") {
+  return ils[lang].format(Number(value));
 }
 
 /** "החל מ-₪20" for products with price options, otherwise the plain price. */
-export function productPriceLabel(product: Pick<Product, "price" | "variants">) {
+export function productPriceLabel(product: Pick<Product, "price" | "variants">, lang: Lang = "he") {
   if (product.variants.length > 0) {
     const prices = product.variants.map((v) => Number(v.price));
     const min = Math.min(...prices);
     // Options that only differ in colour or flavour cost the same: show the plain price.
-    return min === Math.max(...prices) ? formatPrice(min) : `החל מ-${formatPrice(min)}`;
+    if (min === Math.max(...prices)) return formatPrice(min, lang);
+    return lang === "en" ? `From ${formatPrice(min, lang)}` : `החל מ-${formatPrice(min, lang)}`;
   }
-  return formatPrice(product.price);
+  return formatPrice(product.price, lang);
 }
 
 function parseDate(date: string) {
@@ -28,8 +33,8 @@ function parseDate(date: string) {
 }
 
 /** "יום שני, 12 באוקטובר" */
-export function formatDateLong(date: string) {
-  return new Intl.DateTimeFormat("he-IL", {
+export function formatDateLong(date: string, lang: Lang = "he") {
+  return new Intl.DateTimeFormat(lang === "en" ? "en-GB" : "he-IL", {
     weekday: "long",
     day: "numeric",
     month: "long",
@@ -38,17 +43,18 @@ export function formatDateLong(date: string) {
 }
 
 /** "12.10" */
-export function formatDateShort(date: string) {
-  return new Intl.DateTimeFormat("he-IL", { day: "numeric", month: "numeric", timeZone: "UTC" }).format(
+export function formatDateShort(date: string, lang: Lang = "he") {
+  return new Intl.DateTimeFormat(lang === "en" ? "en-GB" : "he-IL", { day: "numeric", month: "numeric", timeZone: "UTC" }).format(
     parseDate(date),
   );
 }
 
 const WEEKDAYS = ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"];
+const WEEKDAYS_EN = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-/** "שני" */
-export function formatWeekday(date: string) {
-  return WEEKDAYS[parseDate(date).getUTCDay()];
+/** "שני" / "Mon" */
+export function formatWeekday(date: string, lang: Lang = "he") {
+  return (lang === "en" ? WEEKDAYS_EN : WEEKDAYS)[parseDate(date).getUTCDay()];
 }
 
 export function formatTime(time: string) {

@@ -1,34 +1,39 @@
+import type { Lang } from "@/i18n";
+import { tr } from "@/i18n/catalog";
+import { messages } from "@/i18n/messages";
+
 const SLOT_ERRORS = new Set(["DATE_BLOCKED", "DAY_CLOSED", "DATE_TOO_FAR", "TIME_OUTSIDE_HOURS", "LEAD_TIME", "INVALID_SLOT"]);
 
-/** Maps error codes raised by `place_order` to customer-facing Hebrew. */
-export function orderErrorMessage(raw: string | undefined) {
+/** Maps error codes raised by `place_order` to customer-facing text. */
+export function orderErrorMessage(raw: string | undefined, lang: Lang = "he") {
+  const m = messages[lang].orderErrors;
   const message = raw ?? "";
   const [code, detail] = message.split(":");
-  if (SLOT_ERRORS.has(code)) return "מועד האיסוף שבחרתם כבר לא פנוי. בחרו מועד אחר.";
+  if (SLOT_ERRORS.has(code)) return m.slot;
   switch (code) {
     case "ORDERS_CLOSED":
-      return "כרגע לא מקבלים הזמנות חדשות דרך האתר. אפשר להתקשר ולהזמין בטלפון.";
+      return m.closed;
     case "INVALID_NAME":
-      return "נא למלא שם מלא.";
+      return m.name;
     case "INVALID_ADDRESS":
-      return "נא למלא כתובת מלאה למשלוח: עיר, רחוב ומספר בית.";
+      return m.address;
     case "DELIVERY_DISABLED":
-      return "כרגע אין משלוחים דרך האתר. אפשר לבחור איסוף עצמי.";
+      return m.deliveryDisabled;
     case "INVALID_PHONE":
-      return "מספר הטלפון לא תקין. לדוגמה: 050-1234567";
+      return m.phone;
     case "EMPTY_CART":
-      return "הסל ריק. הוסיפו מוצר כדי להזמין.";
+      return m.empty;
     case "PRODUCT_UNAVAILABLE":
-      return `״${detail}״ אזל בינתיים. הסירו אותו מהסל כדי להמשיך.`;
+      return m.unavailable(tr(detail ?? "", lang));
     case "VARIANT_REQUIRED":
-      return `צריך לבחור אפשרות עבור ״${detail}״.`;
+      return m.variant(tr(detail ?? "", lang));
     case "PRODUCT_NOT_FOUND":
-      return "אחד המוצרים בסל כבר לא נמצא בתפריט. הסירו אותו ונסו שוב.";
+      return m.notFound;
     case "INVALID_QUANTITY":
     case "TOO_MANY_ITEMS":
-      return "הכמות בסל גדולה מדי להזמנה אחת. להזמנות גדולות התקשרו אלינו.";
+      return m.quantity;
     default:
-      return "ההזמנה לא נשלחה. בדקו את החיבור לאינטרנט ונסו שוב.";
+      return m.network;
   }
 }
 

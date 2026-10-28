@@ -87,8 +87,8 @@ export function getPickupDays(
 
 export const WEEKDAY_NAMES = ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"];
 
-/** "ראשון–חמישי 08:30–18:00" style summary for the storefront. */
-export function summarizeHours(weekly: BusinessSettings["weekly_hours"]) {
+/** "ראשון–חמישי 08:30–18:00" style summary for the storefront. Pass English day names for the English site. */
+export function summarizeHours(weekly: BusinessSettings["weekly_hours"], names: string[] = WEEKDAY_NAMES) {
   const open = [0, 1, 2, 3, 4, 5, 6].filter((d) => weekly[String(d)]?.open);
   if (!open.length) return [];
   const groups: { from: number; to: number; start: string; end: string }[] = [];
@@ -99,7 +99,7 @@ export function summarizeHours(weekly: BusinessSettings["weekly_hours"]) {
     else groups.push({ from: d, to: d, start: h.start, end: h.end });
   }
   return groups.map((g) => ({
-    days: g.from === g.to ? WEEKDAY_NAMES[g.from] : `${WEEKDAY_NAMES[g.from]}–${WEEKDAY_NAMES[g.to]}`,
+    days: g.from === g.to ? names[g.from] : `${names[g.from]}–${names[g.to]}`,
     hours: `${g.start}–${g.end}`,
   }));
 }

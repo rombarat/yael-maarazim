@@ -8,6 +8,8 @@ import { QuantityStepper } from "@/components/ui/quantity-stepper";
 import { MAX_QTY, useCart } from "@/lib/cart-store";
 import { formatPrice } from "@/lib/format";
 import type { Product } from "@/lib/types";
+import { useLang, useT } from "@/i18n/client";
+import { STORE_TOASTER } from "./store-toaster";
 
 /**
  * Option picker, quantity and add button. On the product page the button bar is pinned to the bottom
@@ -18,12 +20,14 @@ export function AddToCart({ product, inDialog = false, onAdded }: { product: Pro
   const openDrawer = useCart((s) => s.openDrawer);
   const [variantId, setVariantId] = useState<string | null>(product.variants[0]?.id ?? null);
   const [quantity, setQuantity] = useState(1);
+  const lang = useLang();
+  const t = useT();
 
   if (!product.is_available) {
     return (
       <div className="rounded-[var(--radius-panel)] border border-line bg-surface/60 p-5">
-        <p className="font-semibold">אזל כרגע</p>
-        <p className="mt-1 text-muted">המוצר לא זמין להזמנה בימים אלה. שווה לבדוק שוב בקרוב.</p>
+        <p className="font-semibold">{t.product.soldOut}</p>
+        <p className="mt-1 text-muted">{t.product.soldOutBody}</p>
       </div>
     );
   }
@@ -33,7 +37,7 @@ export function AddToCart({ product, inDialog = false, onAdded }: { product: Pro
 
   const handleAdd = () => {
     add({ product, variantId, quantity });
-    toast.success(`${product.name} נוסף לסל`, { action: { label: "לסל", onClick: openDrawer } });
+    toast.success(t.product.added(product.name), { toasterId: STORE_TOASTER, action: { label: t.product.toCart, onClick: openDrawer } });
     setQuantity(1);
     onAdded?.();
   };
@@ -42,7 +46,7 @@ export function AddToCart({ product, inDialog = false, onAdded }: { product: Pro
     <div>
       {product.variants.length > 0 && (
         <fieldset className="mb-6">
-          <legend className="mb-2.5 text-[15px] font-semibold">בחרו אפשרות</legend>
+          <legend className="mb-2.5 text-[15px] font-semibold">{t.product.chooseOption}</legend>
           <div className="flex flex-wrap gap-2">
             {product.variants.map((v) => (
               <label
@@ -61,7 +65,7 @@ export function AddToCart({ product, inDialog = false, onAdded }: { product: Pro
                   className="sr-only"
                 />
                 <span className="font-semibold">{v.label}</span>
-                <span className="tabular text-muted">{formatPrice(v.price)}</span>
+                <span className="tabular text-muted">{formatPrice(v.price, lang)}</span>
               </label>
             ))}
           </div>
@@ -77,10 +81,10 @@ export function AddToCart({ product, inDialog = false, onAdded }: { product: Pro
             : "fixed inset-x-0 bottom-0 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 md:static md:border-0 md:bg-transparent md:p-0 md:backdrop-blur-none",
         )}
       >
-        <QuantityStepper value={quantity} onChange={setQuantity} max={MAX_QTY} label={product.name} />
+        <QuantityStepper value={quantity} onChange={setQuantity} max={MAX_QTY} label={product.name} labels={t.quantity} />
         <Button size="lg" className="flex-1 justify-between md:max-w-[340px]" onClick={handleAdd}>
-          <span>הוספה לסל</span>
-          <span className="tabular">{formatPrice(unitPrice * quantity)}</span>
+          <span>{t.product.addToCart}</span>
+          <span className="tabular">{formatPrice(unitPrice * quantity, lang)}</span>
         </Button>
       </div>
       {/* Keeps the fixed bar from covering the page end on phones */}

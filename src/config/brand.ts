@@ -32,29 +32,16 @@ export const brand = {
       "מארזי מתוקים, מארזי לידה, עוגות לאירועים, קינוחי חלבון, מגשי אירוח, עיצובי פירות וסדנאות, בעבודת יד ובכשרות מהודרת. משלוחים או איסוף עצמי.",
   },
 
-  /** Top of the page, under the header: what she makes, in one sentence (the page's h1). */
-  intro: {
-    title: "מארזים, עוגות, מגשי אירוח ועיצובי פירות, בעבודת יד ובאהבה",
-    line: "כל המוצרים בכשרות מהודרת, מהחומרים הכי משובחים וטריים.",
-  },
-
   /**
    * Categories ordered by talking to Yael rather than through the cart (workshops are tailored to each group).
    * Matched by category name. A product with price 0 is also "price on request", in any category.
    */
   contactCategories: ["סדנאות"],
 
-  /** Short "about" block at the end of the page. null hides it. */
+  /** Photo for the "about" block at the end of the page (its text is in src/i18n/messages.ts). null hides it. */
   story: {
-    title: "נעים להכיר, יעל",
-    paragraphs: [
-      "אני יעל, ואני מכינה מארזים מפנקים, עוגות לאירועים, עיצובי פירות ומגשי אירוח, ומעבירה סדנאות. כל הזמנה נבנית בעבודת יד, בהתאמה וביחס אישי.",
-    ],
-    image: { src: "/brand/story.webp", alt: "יעל עומדת מאחורי סירת פירות מעוצבת עם השלט של יעל מתוקים באהבה" },
-  } as { title: string; paragraphs: string[]; image: Img | null } | null,
-
-  /** Footer line under the name. */
-  footerBlurb: "מארזים מפנקים, עוגות לאירועים, קינוחי חלבון, מגשי אירוח ועיצובי פירות בעבודת יד. כל המוצרים בכשרות מהודרת.",
+    image: { src: "/brand/story.webp", alt: "" },
+  } as { image: Img | null } | null,
 
   /** Quick tags offered in the product form (dietary info etc.). */
   productTagPresets: ["חלבי", "פרווה", "מינימום סוכר", "מינימום פחמימות", "עשיר בחלבון", "בעונה"],

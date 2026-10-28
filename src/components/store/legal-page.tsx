@@ -2,6 +2,8 @@ import Link from "next/link";
 import { brand } from "@/config/brand";
 import { telHref } from "@/lib/format";
 import type { BusinessSettings } from "@/lib/types";
+import { messages } from "@/i18n/messages";
+import { getLang } from "@/i18n/server";
 
 export const LEGAL_LINKS = [
   { href: "/terms", label: "תקנון האתר" },
@@ -10,24 +12,31 @@ export const LEGAL_LINKS = [
   { href: "/accessibility", label: "הצהרת נגישות" },
 ];
 
-/** Shared frame for the legal pages: title, date, readable column, links to the sibling pages. */
-export function LegalPage({ title, current, children }: { title: string; current: string; children: React.ReactNode }) {
+/**
+ * Shared frame for the legal pages: title, date, readable column, links to the sibling pages.
+ * The documents are Hebrew only; on the English site they keep their Hebrew layout under a short note.
+ */
+export async function LegalPage({ title, current, children }: { title: string; current: string; children: React.ReactNode }) {
+  const lang = await getLang();
   return (
     <div className="mx-auto max-w-[760px] px-4 pt-10 md:px-8 md:pt-14">
-      <h1 className="font-display text-[40px] leading-tight md:text-[52px]">{title}</h1>
-      <p className="mt-2 text-[15px] text-muted">עודכן לאחרונה: {brand.legal.lastUpdated}</p>
-      <div className="legal mt-8">{children}</div>
-      <nav aria-label="מסמכים משפטיים" className="mt-14 border-t border-line pt-6">
-        <ul className="flex flex-wrap gap-x-5 gap-y-2 text-[15px]">
-          {LEGAL_LINKS.filter((l) => l.href !== current).map((l) => (
-            <li key={l.href}>
-              <Link href={l.href} className="font-semibold text-brand underline-offset-4 hover:underline">
-                {l.label}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </nav>
+      {lang === "en" && <p className="mb-6 rounded-[var(--radius-panel)] bg-surface px-5 py-3 text-[16px]">{messages.en.legal.hebrewOnly}</p>}
+      <div lang="he" dir="rtl">
+        <h1 className="font-display text-[40px] leading-tight md:text-[52px]">{title}</h1>
+        <p className="mt-2 text-[15px] text-muted">עודכן לאחרונה: {brand.legal.lastUpdated}</p>
+        <div className="legal mt-8">{children}</div>
+        <nav aria-label="מסמכים משפטיים" className="mt-14 border-t border-line pt-6">
+          <ul className="flex flex-wrap gap-x-5 gap-y-2 text-[15px]">
+            {LEGAL_LINKS.filter((l) => l.href !== current).map((l) => (
+              <li key={l.href}>
+                <Link href={l.href} className="font-semibold text-brand underline-offset-4 hover:underline">
+                  {l.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
     </div>
   );
 }

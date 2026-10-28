@@ -12,10 +12,11 @@ type Props = {
   children: ReactNode;
   footer?: ReactNode;
   className?: string;
+  closeLabel?: string;
 };
 
 /** Side panel that slides in from the inline-end side (left in RTL). Traps focus while open. */
-export function Drawer({ open, onClose, title, children, footer, className }: Props) {
+export function Drawer({ open, onClose, title, children, footer, className, closeLabel = "סגירה" }: Props) {
   const panelRef = useRef<HTMLDivElement>(null);
   useModal(open, onClose, panelRef);
 
@@ -41,7 +42,7 @@ export function Drawer({ open, onClose, title, children, footer, className }: Pr
             onClick={onClose}
             data-autofocus
             className="-me-2 flex size-11 items-center justify-center rounded-full hover:bg-surface"
-            aria-label="סגירה"
+            aria-label={closeLabel}
           >
             <X className="size-5" />
           </button>

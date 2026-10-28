@@ -6,11 +6,14 @@ import { useCart, type CartLine } from "@/lib/cart-store";
 import { formatPrice } from "@/lib/format";
 import { QuantityStepper } from "@/components/ui/quantity-stepper";
 import { MAX_QTY } from "@/lib/cart-store";
+import { useLang, useT } from "@/i18n/client";
 
 /** Editable list of cart lines, shared by the drawer and the checkout page. */
 export function CartLines({ lines, compact = false }: { lines: CartLine[]; compact?: boolean }) {
   const setQuantity = useCart((s) => s.setQuantity);
   const remove = useCart((s) => s.remove);
+  const lang = useLang();
+  const t = useT();
 
   return (
     <ul className="divide-y divide-line">
@@ -27,18 +30,18 @@ export function CartLines({ lines, compact = false }: { lines: CartLine[]; compa
                 <p className="font-semibold leading-snug">{line.name}</p>
                 <p className="text-[14px] text-muted">
                   {line.variantLabel ?? line.unitLabel}
-                  {!compact && !line.unavailable && <span className="tabular"> | {formatPrice(line.unitPrice)} ליח׳</span>}
+                  {!compact && !line.unavailable && <span className="tabular"> | {formatPrice(line.unitPrice, lang)} {t.cart.perUnit}</span>}
                 </p>
               </div>
               <p className="tabular shrink-0 font-semibold">
-                {line.unavailable ? "" : formatPrice(line.unitPrice * line.quantity)}
+                {line.unavailable ? "" : formatPrice(line.unitPrice * line.quantity, lang)}
               </p>
             </div>
             {line.unavailable ? (
               <div className="mt-2 flex items-center justify-between gap-2 rounded-lg bg-alert-soft px-3 py-2 text-[14px] text-alert">
-                <span>אזל כרגע, לא ייכלל בהזמנה</span>
+                <span>{t.cart.soldOutLine}</span>
                 <button type="button" onClick={() => remove(line.key)} className="font-semibold underline underline-offset-2">
-                  הסרה
+                  {t.cart.remove}
                 </button>
               </div>
             ) : (
@@ -48,13 +51,14 @@ export function CartLines({ lines, compact = false }: { lines: CartLine[]; compa
                   value={line.quantity}
                   max={MAX_QTY}
                   label={line.name}
+                  labels={t.quantity}
                   onChange={(q) => setQuantity(line.key, q)}
                 />
                 <button
                   type="button"
                   onClick={() => remove(line.key)}
                   className="flex size-10 items-center justify-center rounded-full text-muted hover:bg-surface hover:text-alert"
-                  aria-label={`הסרת ${line.name} מהסל`}
+                  aria-label={t.cart.removeAria(line.name)}
                 >
                   <Trash2 className="size-[18px]" />
                 </button>

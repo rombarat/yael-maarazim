@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Cookie } from "lucide-react";
+import { useT } from "@/i18n/client";
 
 /**
  * Small cookie notice. The site itself only uses what it needs to work (the cart in the browser's
@@ -35,6 +36,7 @@ export function openCookieSettings() {
 
 export function CookieConsent() {
   const [open, setOpen] = useState(false);
+  const t = useT();
 
   useEffect(() => {
     if (!readChoice()) setOpen(true);
@@ -57,15 +59,15 @@ export function CookieConsent() {
   return (
     <div
       role="region"
-      aria-label="הודעה על שימוש בעוגיות"
+      aria-label={t.cookies.region}
       className="animate-fade-in fixed inset-x-3 bottom-3 z-50 mx-auto max-w-[420px] rounded-[var(--radius-panel)] border border-line bg-white p-4 shadow-[0_10px_40px_-12px_rgba(43,26,26,0.35)] sm:inset-x-auto sm:start-5 sm:bottom-5"
     >
       <div className="flex items-start gap-3">
         <Cookie className="mt-0.5 size-5 shrink-0 text-brand" strokeWidth={1.75} aria-hidden="true" />
         <p className="text-[15px] leading-snug">
-          האתר משתמש בעוגיות ובאחסון בדפדפן כדי לשמור את סל הקניות ולפעול כראוי.{" "}
+          {t.cookies.text}{" "}
           <Link href="/cookies" className="font-semibold text-brand underline underline-offset-2">
-            מדיניות העוגיות
+            {t.cookies.policy}
           </Link>
         </p>
       </div>
@@ -75,24 +77,24 @@ export function CookieConsent() {
           onClick={() => choose("all")}
           className="h-11 flex-1 rounded-full bg-brand px-4 font-semibold text-white transition-colors hover:bg-brand-dark"
         >
-          אישור
+          {t.cookies.accept}
         </button>
         <button
           type="button"
           onClick={() => choose("essential")}
           className="h-11 flex-1 rounded-full border border-line px-4 font-semibold text-ink transition-colors hover:bg-surface"
         >
-          הכרחיות בלבד
+          {t.cookies.essential}
         </button>
       </div>
     </div>
   );
 }
 
-export function CookieSettingsLink({ className }: { className?: string }) {
+export function CookieSettingsLink({ className, label = "הגדרות עוגיות" }: { className?: string; label?: string }) {
   return (
     <button type="button" onClick={openCookieSettings} className={className}>
-      הגדרות עוגיות
+      {label}
     </button>
   );
 }

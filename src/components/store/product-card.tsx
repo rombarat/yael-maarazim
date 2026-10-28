@@ -6,7 +6,9 @@ import { toast } from "sonner";
 import { WhatsAppIcon } from "@/components/ui/social-icons";
 import { useCart } from "@/lib/cart-store";
 import { useProductDialog } from "@/lib/product-dialog";
-import { productInquiry, whatsappMessageHref } from "@/lib/contact";
+import { whatsappMessageHref } from "@/lib/contact";
+import { useLang, useT } from "@/i18n/client";
+import { STORE_TOASTER } from "./store-toaster";
 import { productPriceLabel } from "@/lib/format";
 import type { Product } from "@/lib/types";
 
@@ -22,6 +24,8 @@ export function ProductCard({ product, contactOnly = false, phone = "", priority
   const openDialog = useProductDialog((s) => s.open);
   const add = useCart((s) => s.add);
   const openDrawer = useCart((s) => s.openDrawer);
+  const lang = useLang();
+  const t = useT();
   const needsChoice = product.variants.length > 0;
   const soldOut = !product.is_available;
   const showPrice = !contactOnly || Number(product.price) > 0;
@@ -32,7 +36,7 @@ export function ProductCard({ product, contactOnly = false, phone = "", priority
       return;
     }
     add({ product, quantity: 1 });
-    toast.success(`${product.name} נוסף לסל`, { action: { label: "לסל", onClick: openDrawer } });
+    toast.success(t.product.added(product.name), { toasterId: STORE_TOASTER, action: { label: t.product.toCart, onClick: openDrawer } });
   };
 
   return (
@@ -63,7 +67,7 @@ export function ProductCard({ product, contactOnly = false, phone = "", priority
             />
           )}
           {soldOut && (
-            <span className="absolute start-2.5 top-2.5 rounded-full bg-white px-3 py-1 text-[14px] font-semibold">אזל כרגע</span>
+            <span className="absolute start-2.5 top-2.5 rounded-full bg-white px-3 py-1 text-[14px] font-semibold">{t.product.soldOut}</span>
           )}
         </div>
         <h3 className="mt-3 font-display text-[18px] font-medium leading-snug md:text-[19px]">{product.name}</h3>
@@ -73,29 +77,29 @@ export function ProductCard({ product, contactOnly = false, phone = "", priority
 
       {contactOnly ? (
         <div className="mt-2">
-          {showPrice && <p className="tabular mb-2 font-display text-[19px] font-semibold">{productPriceLabel(product)}</p>}
+          {showPrice && <p className="tabular mb-2 font-display text-[19px] font-semibold">{productPriceLabel(product, lang)}</p>}
           {phone && (
             <a
-              href={whatsappMessageHref(phone, productInquiry(product.name))}
+              href={whatsappMessageHref(phone, t.whatsapp.inquiry(product.name))}
               target="_blank"
               rel="noopener noreferrer"
               className="flex h-11 w-full items-center justify-center gap-2 rounded-full border border-line bg-white px-3 text-[16px] font-semibold text-ink transition-colors hover:border-[#25D366] hover:bg-[#25D366]/10"
-              aria-label={`תיאום ${product.name} בוואטסאפ`}
+              aria-label={t.whatsapp.arrangeAria(product.name)}
             >
               <WhatsAppIcon className="size-5 shrink-0" />
-              לתיאום בוואטסאפ
+              {t.whatsapp.arrange}
             </a>
           )}
         </div>
       ) : (
         <div className="mt-2 flex min-h-11 items-center justify-between gap-2">
-          <span className="tabular font-display text-[19px] font-semibold">{productPriceLabel(product)}</span>
+          <span className="tabular font-display text-[19px] font-semibold">{productPriceLabel(product, lang)}</span>
           {!soldOut && (
             <button
               type="button"
               onClick={quickAdd}
               className="flex size-11 shrink-0 items-center justify-center rounded-full bg-brand text-white transition-colors hover:bg-brand-dark active:scale-[0.96]"
-              aria-label={needsChoice ? `בחירת גודל עבור ${product.name}` : `הוספת ${product.name} לסל`}
+              aria-label={needsChoice ? t.product.chooseAria(product.name) : t.product.addAria(product.name)}
             >
               <Plus className="size-5" strokeWidth={2.5} />
             </button>

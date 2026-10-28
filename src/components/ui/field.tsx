@@ -10,16 +10,17 @@ type FieldProps = {
   hint?: ReactNode;
   error?: string;
   optional?: boolean;
+  optionalLabel?: string;
   children: ReactNode;
   className?: string;
 };
 
-export function Field({ label, htmlFor, hint, error, optional, children, className }: FieldProps) {
+export function Field({ label, htmlFor, hint, error, optional, optionalLabel = "(לא חובה)", children, className }: FieldProps) {
   return (
     <div className={clsx("flex flex-col gap-1.5", className)}>
       <label htmlFor={htmlFor} className="text-[15px] font-semibold text-ink">
         {label}
-        {optional && <span className="ms-1.5 font-normal text-muted">(לא חובה)</span>}
+        {optional && <span className="ms-1.5 font-normal text-muted">{optionalLabel}</span>}
       </label>
       {children}
       {error ? (

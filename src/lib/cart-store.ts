@@ -117,6 +117,8 @@ export const useCart = create<CartState>()(
             next.unitPrice !== line.unitPrice ||
             next.unavailable !== Boolean(line.unavailable) ||
             next.name !== line.name ||
+            next.variantLabel !== line.variantLabel ||
+            next.unitLabel !== line.unitLabel ||
             next.image !== line.image
           )
             changed = true;

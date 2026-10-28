@@ -20,21 +20,26 @@ import type { BlockedDate, BusinessSettings } from "@/lib/types";
 import { CartLines } from "./cart-lines";
 import { PickupPicker } from "./pickup-picker";
 import { useCartSync } from "./use-cart-sync";
+import { useLang, useT } from "@/i18n/client";
+import { STORE_TOASTER } from "./store-toaster";
+import { messages } from "@/i18n/messages";
 
-const schema = z.object({
-    name: z.string().trim().min(2, "נא למלא שם מלא").max(80, "השם ארוך מדי"),
+type CheckoutErrors = (typeof messages)["he"]["checkout"]["errors"];
+
+const makeSchema = (e: CheckoutErrors) =>
+  z.object({
+    name: z.string().trim().min(2, e.name).max(80, e.nameLong),
     phone: z
       .string()
       .transform((v) => v.replace(/[^\d+]/g, "").replace(/^\+972/, "0"))
-      .refine((v) => /^0\d{8,9}$/.test(v), "מספר טלפון לא תקין. לדוגמה: 050-1234567"),
-    notes: z.string().max(600, "ההערה ארוכה מדי (עד 600 תווים)"),
-    date: z.string({ error: "בחרו יום ושעה" }),
-    time: z.string({ error: "בחרו שעה" }),
+      .refine((v) => /^0\d{8,9}$/.test(v), e.phone),
+    notes: z.string().max(600, e.notes),
+    date: z.string({ error: e.date }),
+    time: z.string({ error: e.time }),
     fulfillment: z.enum(["pickup", "delivery"]),
-    address: z.string().trim().max(200, "הכתובת ארוכה מדי"),
-    accepted: z.literal(true, { error: "כדי לשלוח הזמנה צריך לאשר את התקנון ואת מדיניות הפרטיות" }),
-});
-const ADDRESS_MISSING = "נא למלא כתובת מלאה: עיר, רחוב ומספר בית";
+    address: z.string().trim().max(200, e.addressLong),
+    accepted: z.literal(true, { error: e.accepted }),
+  });
 
 type ErrorKey = "name" | "phone" | "notes" | "pickup" | "address" | "accepted";
 type Errors = Partial<Record<ErrorKey, string>>;
@@ -43,6 +48,10 @@ const FIELD_ORDER: ErrorKey[] = ["address", "pickup", "name", "phone", "notes", 
 
 export function CheckoutForm({ settings, blocked }: { settings: BusinessSettings; blocked: BlockedDate[] }) {
   const router = useRouter();
+  const lang = useLang();
+  const t = useT();
+  const c = t.checkout;
+  const schema = useMemo(() => makeSchema(c.errors), [c.errors]);
   const hydrated = useCartHydrated();
   const lines = useCart((s) => s.lines);
   const clear = useCart((s) => s.clear);
@@ -63,16 +72,16 @@ export function CheckoutForm({ settings, blocked }: { settings: BusinessSettings
   const [submitting, setSubmitting] = useState(false);
   const [placed, setPlaced] = useState(false);
 
-  if (!hydrated) return <PageSpinner />;
-  if (placed) return <PageSpinner label="ההזמנה נשלחה, מעבירים לאישור…" />;
+  if (!hydrated) return <PageSpinner label={c.loading} />;
+  if (placed) return <PageSpinner label={c.sent} />;
 
   if (lines.length === 0) {
     return (
       <EmptyState
         icon={<ShoppingBag className="size-6" />}
-        title="הסל ריק"
-        body="כדי להזמין, הוסיפו קודם מוצרים מהקטלוג."
-        action={<LinkButton href="/">לכל המוצרים</LinkButton>}
+        title={c.emptyTitle}
+        body={c.emptyBody}
+        action={<LinkButton href="/">{t.cart.browse}</LinkButton>}
       />
     );
   }
@@ -102,7 +111,7 @@ export function CheckoutForm({ settings, blocked }: { settings: BusinessSettings
         if (key === "date" || key === "time") next.pickup ??= issue.message;
         else if (FIELD_ORDER.includes(key as ErrorKey)) next[key as ErrorKey] ??= issue.message;
       }
-      if (addressMissing) next.address ??= ADDRESS_MISSING;
+      if (addressMissing) next.address ??= c.errors.address;
       setErrors(next);
       const firstId = FIELD_ORDER.find((k) => next[k]) ?? "notes";
       document.getElementById(firstId)?.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -127,8 +136,8 @@ export function CheckoutForm({ settings, blocked }: { settings: BusinessSettings
 
     if (!res.ok) {
       setSubmitting(false);
-      const message = orderErrorMessage(res.error);
-      toast.error(message);
+      const message = orderErrorMessage(res.error, lang);
+      toast.error(message, { toasterId: STORE_TOASTER });
       if (isProductError(res.error)) {
         sync(await fetchCartProducts(lines.map((l) => l.productId)).catch(() => []));
       }
@@ -151,9 +160,9 @@ export function CheckoutForm({ settings, blocked }: { settings: BusinessSettings
       <div className="min-w-0 space-y-10">
         {closed && (
           <div className="rounded-[var(--radius-panel)] border border-alert/25 bg-alert-soft p-5 text-alert" role="status">
-            <p className="font-semibold">כרגע לא מקבלים הזמנות דרך האתר</p>
+            <p className="font-semibold">{c.closedTitle}</p>
             <p className="mt-1">
-              {settings.closed_message || (settings.phone ? "אפשר להזמין בטלפון" : "נסו שוב בקרוב.")}{" "}
+              {settings.closed_message || (settings.phone ? c.orderByPhone : c.tryLater)}{" "}
               {settings.phone && (
                 <a href={telHref(settings.phone)} className="font-semibold underline" dir="ltr">
                   {settings.phone}
@@ -165,12 +174,12 @@ export function CheckoutForm({ settings, blocked }: { settings: BusinessSettings
 
         {settings.delivery_enabled && (
           <fieldset>
-            <legend className="font-display text-[28px] leading-none md:text-[32px]">איך לקבל את ההזמנה?</legend>
+            <legend className="font-display text-[28px] leading-none md:text-[32px]">{c.howTitle}</legend>
             <div className="mt-5 grid grid-cols-2 gap-3">
               {(
                 [
-                  { value: "pickup", label: "איסוף עצמי", icon: Store },
-                  { value: "delivery", label: "משלוח", icon: Truck },
+                  { value: "pickup", label: c.pickup, icon: Store },
+                  { value: "delivery", label: c.delivery, icon: Truck },
                 ] as const
               ).map((o) => (
                 <label
@@ -196,7 +205,7 @@ export function CheckoutForm({ settings, blocked }: { settings: BusinessSettings
             {delivery && (
               <div className="mt-5 space-y-3">
                 {settings.delivery_notes && <p className="text-[15px] text-muted">{settings.delivery_notes}</p>}
-                <Field label="כתובת למשלוח" htmlFor="address" error={errors.address} hint="עיר, רחוב, מספר בית, ואם צריך גם קומה ודירה">
+                <Field label={c.address} htmlFor="address" error={errors.address} hint={c.addressHint}>
                   <Input
                     id="address"
                     name="address"
@@ -217,21 +226,21 @@ export function CheckoutForm({ settings, blocked }: { settings: BusinessSettings
 
         <section aria-labelledby="pickup-title" id="pickup" className="scroll-mt-28">
           <h2 id="pickup-title" className="font-display text-[28px] leading-none md:text-[32px]">
-            {delivery ? "מתי להביא?" : "מתי לאסוף?"}
+            {delivery ? c.whenDelivery : c.whenPickup}
           </h2>
           <p className="mt-2 text-muted">
-            {settings.min_lead_hours > 0 && `הזמנה לפחות ${settings.min_lead_hours} שעות מראש. `}
-            {!settings.delivery_enabled && "איסוף עצמי בלבד."}
+            {settings.min_lead_hours > 0 && c.leadTime(settings.min_lead_hours)}
+            {!settings.delivery_enabled && c.pickupOnly}
           </p>
           <div className="mt-5">
             {days.length === 0 ? (
               <div className="flex items-start gap-3 rounded-[var(--radius-panel)] bg-surface p-5">
                 <CalendarX className="mt-0.5 size-5 shrink-0 text-brand" />
                 <p>
-                  אין כרגע מועדים פנויים באתר.
+                  {c.noSlots}
                   {settings.phone && (
                     <>
-                      {" "}אפשר להזמין בטלפון{" "}
+                      {" "}{c.orderByPhone}{" "}
                       <a href={telHref(settings.phone)} className="font-semibold underline" dir="ltr">
                         {settings.phone}
                       </a>
@@ -269,9 +278,9 @@ export function CheckoutForm({ settings, blocked }: { settings: BusinessSettings
 
         <section aria-labelledby="details-title" className="space-y-5">
           <h2 id="details-title" className="font-display text-[28px] leading-none md:text-[32px]">
-            הפרטים שלך
+            {c.detailsTitle}
           </h2>
-          <Field label="שם מלא" htmlFor="name" error={errors.name}>
+          <Field label={c.name} htmlFor="name" error={errors.name}>
             <Input
               id="name"
               name="name"
@@ -285,7 +294,7 @@ export function CheckoutForm({ settings, blocked }: { settings: BusinessSettings
               maxLength={80}
             />
           </Field>
-          <Field label="טלפון" htmlFor="phone" error={errors.phone} hint="נחזור אליכם למספר הזה לאישור ההזמנה">
+          <Field label={c.phone} htmlFor="phone" error={errors.phone} hint={c.phoneHint}>
             <Input
               id="phone"
               name="phone"
@@ -293,7 +302,7 @@ export function CheckoutForm({ settings, blocked }: { settings: BusinessSettings
               inputMode="tel"
               autoComplete="tel"
               dir="ltr"
-              className="text-right"
+              className={lang === "en" ? "text-left" : "text-right"}
               placeholder="050-1234567"
               value={phone}
               onChange={(e) => {
@@ -303,7 +312,7 @@ export function CheckoutForm({ settings, blocked }: { settings: BusinessSettings
               invalid={!!errors.phone}
             />
           </Field>
-          <Field label="הערות להזמנה" htmlFor="notes" optional error={errors.notes} hint="למשל: כיתוב על העוגה, צבעים, אלרגיות">
+          <Field label={c.notes} htmlFor="notes" optional optionalLabel={c.optional} error={errors.notes} hint={c.notesHint}>
             <Textarea
               id="notes"
               name="notes"
@@ -318,7 +327,7 @@ export function CheckoutForm({ settings, blocked }: { settings: BusinessSettings
 
       <aside aria-labelledby="summary-title" className="min-w-0 rounded-[var(--radius-panel)] border border-line bg-white p-5 md:sticky md:top-28">
         <h2 id="summary-title" className="font-display text-[26px] leading-none">
-          ההזמנה שלך
+          {c.summaryTitle}
         </h2>
         <div className="mt-2">
           <CartLines lines={lines} compact />
@@ -326,15 +335,15 @@ export function CheckoutForm({ settings, blocked }: { settings: BusinessSettings
         <div className="mt-2 space-y-1 border-t border-line pt-4">
           {date && time && (
             <p className="text-[15px] text-muted">
-              {delivery ? "משלוח" : "איסוף"}: {formatDateLong(date)}, <span className="tabular">{time}</span>
+              {delivery ? c.delivery : c.pickup}: {formatDateLong(date, lang)}, <span className="tabular">{time}</span>
             </p>
           )}
           <div className="flex items-baseline justify-between">
-            <span className="font-semibold">סה״כ לתשלום</span>
-            <span className="tabular text-[24px] font-bold">{formatPrice(total)}</span>
+            <span className="font-semibold">{c.totalToPay}</span>
+            <span className="tabular text-[24px] font-bold">{formatPrice(total, lang)}</span>
           </div>
           <p className="text-[14px] text-muted">
-            אין צורך בתשלום עכשיו. התשלום מול העסק{delivery ? ", ודמי המשלוח יתואמו איתכם." : "."}
+            {delivery ? c.noPaymentNowDelivery : c.noPaymentNow}
           </p>
         </div>
 
@@ -353,13 +362,13 @@ export function CheckoutForm({ settings, blocked }: { settings: BusinessSettings
               className="mt-0.5 size-5 shrink-0 accent-[var(--color-brand)]"
             />
             <span>
-              קראתי ואני מסכים/ה ל
+              {c.acceptPrefix}
               <Link href="/terms" target="_blank" className="font-semibold text-brand underline underline-offset-2">
-                תקנון האתר
-              </Link>{" "}
-              ול
+                {c.terms}
+              </Link>
+              {c.and}
               <Link href="/privacy" target="_blank" className="font-semibold text-brand underline underline-offset-2">
-                מדיניות הפרטיות
+                {c.privacy}
               </Link>
             </span>
           </label>
@@ -371,9 +380,9 @@ export function CheckoutForm({ settings, blocked }: { settings: BusinessSettings
         </div>
 
         <Button type="submit" size="lg" className="mt-5 w-full" loading={submitting} disabled={closed || hasUnavailable || days.length === 0}>
-          {submitting ? "שולחים…" : "שליחת הזמנה"}
+          {submitting ? c.submitting : c.submit}
         </Button>
-        {hasUnavailable && <p className="mt-2 text-center text-[14px] text-alert">הסירו את המוצרים שאזלו כדי להמשיך.</p>}
+        {hasUnavailable && <p className="mt-2 text-center text-[14px] text-alert">{t.cart.removeSoldOut}</p>}
       </aside>
     </form>
   );

@@ -37,3 +37,12 @@ Both with Hebrew subsets. The admin keeps Suez One + Rubik.
 ## The one bold thing
 Category names in large red Fredoka, followed by the curl-and-heart from the logo's border. Everything else
 stays quiet: no card borders or shadows, no entrance animations.
+
+## English
+A button in the header switches the storefront to English (a `lang` cookie; the store wrapper gets
+`lang="en" dir="ltr"`). The admin never reads it and stays Hebrew.
+- UI text: `src/i18n/messages.ts` (Hebrew and English side by side).
+- Catalog text: `src/i18n/catalog-en.ts`, keyed by the exact Hebrew text. A product the owner adds or
+  edits shows its Hebrew text on the English site until an English line is added there.
+- Orders are stored with the Hebrew product names, so the admin reads them as before.
+- Legal pages stay in Hebrew, with a one-line note on the English site.

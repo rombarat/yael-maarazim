@@ -3,6 +3,8 @@
 import { z } from "zod";
 import { queryOne } from "@/server/db";
 import { getProductsByIds } from "@/lib/catalog";
+import { localizeProduct } from "@/i18n/catalog";
+import { getLang } from "@/i18n/server";
 import type { ActionResult, Product } from "@/lib/types";
 
 const orderInput = z.object({
@@ -50,7 +52,8 @@ export async function placeOrder(input: z.input<typeof orderInput>): Promise<Act
   }
 }
 
-/** Fresh prices/availability for the cart (an owner may have changed them since it was filled). */
+/** Fresh prices/availability for the cart (an owner may have changed them since it was filled), in the shopper's language. */
 export async function fetchCartProducts(ids: string[]): Promise<Product[]> {
-  return getProductsByIds(ids.slice(0, 60));
+  const [products, lang] = await Promise.all([getProductsByIds(ids.slice(0, 60)), getLang()]);
+  return products.map((p) => localizeProduct(p, lang));
 }

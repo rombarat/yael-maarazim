@@ -6,7 +6,9 @@ import { Clock, Phone, ShoppingBag, X } from "lucide-react";
 import { WhatsAppIcon } from "@/components/ui/social-icons";
 import { useModal } from "@/components/ui/use-modal";
 import { productIdFromUrl, syncProductDialogFromUrl, useProductDialog } from "@/lib/product-dialog";
-import { isContactOnly, productInquiry, whatsappMessageHref } from "@/lib/contact";
+import { isContactOnly, whatsappMessageHref } from "@/lib/contact";
+import { tr } from "@/i18n/catalog";
+import { useLang, useT } from "@/i18n/client";
 import { productPriceLabel, telHref } from "@/lib/format";
 import type { BusinessSettings, Category, Product } from "@/lib/types";
 import { AddToCart } from "./add-to-cart";
@@ -17,6 +19,8 @@ type Props = { products: Product[]; categories: Category[]; settings: BusinessSe
 export function ProductDialog({ products, categories, settings }: Props) {
   const productId = useProductDialog((s) => s.productId);
   const close = useProductDialog((s) => s.close);
+  const lang = useLang();
+  const t = useT();
   const panelRef = useRef<HTMLDivElement>(null);
   const ids = useMemo(() => new Set(products.map((p) => p.id)), [products]);
   const product = products.find((p) => p.id === productId) ?? null;
@@ -50,7 +54,7 @@ export function ProductDialog({ products, categories, settings }: Props) {
           onClick={close}
           data-autofocus
           className="absolute end-3 top-3 z-20 flex size-11 items-center justify-center rounded-full bg-white/95 text-ink shadow-[0_2px_10px_rgba(43,26,26,0.2)] hover:bg-white"
-          aria-label="סגירה וחזרה לרשימה"
+          aria-label={t.product.close}
         >
           <X className="size-5" />
         </button>
@@ -69,12 +73,12 @@ export function ProductDialog({ products, categories, settings }: Props) {
           </div>
 
           <div className="flex flex-col px-5 pt-6 md:px-8 md:pt-10">
-            {category && <p className="text-[15px] font-semibold text-brand">{category.name}</p>}
+            {category && <p className="text-[15px] font-semibold text-brand">{tr(category.name, lang)}</p>}
             <h2 id="product-dialog-title" className="mt-1 font-display text-[30px] font-semibold leading-[1.1] md:text-[38px]">
               {product.name}
             </h2>
             {(!contactOnly || Number(product.price) > 0) && (
-              <p className="tabular mt-3 font-display text-[24px] font-semibold">{productPriceLabel(product)}</p>
+              <p className="tabular mt-3 font-display text-[24px] font-semibold">{productPriceLabel(product, lang)}</p>
             )}
             {product.unit_label && <p className="text-[15px] text-muted">{product.unit_label}</p>}
 
@@ -90,19 +94,19 @@ export function ProductDialog({ products, categories, settings }: Props) {
 
             {product.description && <p className="mt-5 text-[17px] leading-[1.75]">{product.description}</p>}
 
-{contactOnly ? (
+            {contactOnly ? (
               <div className="mt-6 border-t border-line pb-8 pt-5">
-                <p className="text-[17px]">כל הזמנה כאן מותאמת אישית. כתבו לי ונתאם יחד את הפרטים והמחיר.</p>
+                <p className="text-[17px]">{t.product.contactNote}</p>
                 {settings.phone && (
                   <div className="mt-4 flex flex-wrap gap-3">
                     <a
-                      href={whatsappMessageHref(settings.phone, productInquiry(product.name))}
+                      href={whatsappMessageHref(settings.phone, t.whatsapp.inquiry(product.name))}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex h-12 items-center gap-2 rounded-full border border-line bg-white px-6 text-[17px] font-semibold transition-colors hover:border-[#25D366] hover:bg-[#25D366]/10"
                     >
                       <WhatsAppIcon className="size-6" />
-                      לתיאום בוואטסאפ
+                      {t.whatsapp.arrange}
                     </a>
                     <a
                       href={telHref(settings.phone)}
@@ -123,19 +127,19 @@ export function ProductDialog({ products, categories, settings }: Props) {
                 <ul className="mb-8 mt-5 space-y-2.5 border-t border-line pt-5 text-[16px] text-ink/85 md:mt-0">
                   <li className="flex items-center gap-3">
                     <ShoppingBag className="size-[18px] shrink-0 text-brand" strokeWidth={1.75} />
-                    {settings.delivery_enabled ? "משלוח או איסוף עצמי, בוחרים יום ושעה בסיום ההזמנה" : "איסוף עצמי, בוחרים יום ושעה בסיום ההזמנה"}
+                    {settings.delivery_enabled ? t.product.deliveryOrPickup : t.product.pickupOnly}
                   </li>
                   {settings.min_lead_hours > 0 && (
                     <li className="flex items-center gap-3">
                       <Clock className="size-[18px] shrink-0 text-brand" strokeWidth={1.75} />
-                      מזמינים לפחות {settings.min_lead_hours} שעות מראש
+                      {t.product.leadTime(settings.min_lead_hours)}
                     </li>
                   )}
                   {settings.phone && (
                     <li className="flex items-center gap-3">
                       <Phone className="size-[18px] shrink-0 text-brand" strokeWidth={1.75} />
                       <span>
-                        שאלות על המוצר?{" "}
+                        {t.product.questions}{" "}
                         <a href={telHref(settings.phone)} className="font-semibold underline-offset-4 hover:underline" dir="ltr">
                           {settings.phone}
                         </a>

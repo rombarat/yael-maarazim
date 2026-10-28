@@ -17,6 +17,7 @@ Stop `npm run dev` before running other `npm run db:*` commands against the loca
 - `src/app/globals.css` — colours (`.store` for the storefront, `@theme` for the admin); `src/app/layout.tsx` — fonts
 - `seed/catalog.json` + `seed/images/` — products, categories, hours, contact
 - `public/brand/` — logo, icon and story photo
+- `src/i18n/` — storefront text in Hebrew and English (`messages.ts`) and the English catalog (`catalog-en.ts`)
 
 ## Commands
 | Command | What it does |

@@ -5,15 +5,22 @@ import { LinkButton } from "@/components/ui/button";
 import { getSettings } from "@/lib/catalog";
 import { getOrderSummary } from "@/lib/admin-data";
 import { formatDateLong, formatPrice, telHref } from "@/lib/format";
+import { localizeSettings, tr } from "@/i18n/catalog";
+import { messages } from "@/i18n/messages";
+import { getLang } from "@/i18n/server";
 
-export const metadata: Metadata = { title: "ההזמנה התקבלה", robots: { index: false } };
+export async function generateMetadata(): Promise<Metadata> {
+  return { title: messages[await getLang()].order.metaTitle, robots: { index: false } };
+}
 
 export default async function OrderConfirmationPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   if (!/^[0-9a-f-]{36}$/i.test(id)) notFound();
 
-  const [order, settings] = await Promise.all([getOrderSummary(id), getSettings()]);
+  const [order, rawSettings, lang] = await Promise.all([getOrderSummary(id), getSettings(), getLang()]);
   if (!order) notFound();
+  const settings = localizeSettings(rawSettings, lang);
+  const t = messages[lang].order;
 
   const firstName = order.customer_name.split(" ")[0];
 
@@ -22,40 +29,40 @@ export default async function OrderConfirmationPage({ params }: { params: Promis
       <div className="flex size-14 items-center justify-center rounded-full bg-success text-white">
         <Check className="size-7" strokeWidth={2.5} />
       </div>
-      <h1 className="mt-6 font-display text-[42px] leading-[1.05] md:text-[56px]">תודה {firstName}, ההזמנה התקבלה</h1>
-      <p className="mt-3 text-[18px] text-ink/85">נחזור אליכם בהקדם לאישור. שמרו את מספר ההזמנה.</p>
+      <h1 className="mt-6 font-display text-[42px] leading-[1.05] md:text-[56px]">{t.thanks(firstName)}</h1>
+      <p className="mt-3 text-[18px] text-ink/85">{t.body}</p>
 
       <div className="mt-8 overflow-hidden rounded-[var(--radius-panel)] border border-line bg-white">
         <div className="flex items-center justify-between bg-surface px-5 py-4">
-          <span className="text-muted">מספר הזמנה</span>
+          <span className="text-muted">{t.number}</span>
           <span className="tabular font-display text-[34px] leading-none">#{order.order_number}</span>
         </div>
         <dl className="divide-y divide-line px-5">
           <div className="flex justify-between gap-4 py-4">
-            <dt className="text-muted">{order.fulfillment_type === "delivery" ? "משלוח" : "איסוף"}</dt>
+            <dt className="text-muted">{order.fulfillment_type === "delivery" ? t.delivery : t.pickup}</dt>
             <dd className="text-end font-semibold">
-              {formatDateLong(order.pickup_date)}, <span className="tabular">{order.pickup_time}</span>
+              {formatDateLong(order.pickup_date, lang)}, <span className="tabular">{order.pickup_time}</span>
             </dd>
           </div>
           <div className="py-4">
-            <dt className="sr-only">מוצרים</dt>
+            <dt className="sr-only">{t.items}</dt>
             <dd>
               <ul className="space-y-2">
                 {order.items.map((item, i) => (
                   <li key={i} className="flex justify-between gap-4">
                     <span>
-                      <span className="tabular font-semibold">{item.quantity}×</span> {item.product_name}
-                      {item.variant_label && <span className="text-muted"> ({item.variant_label})</span>}
+                      <span className="tabular font-semibold">{item.quantity}×</span> {tr(item.product_name, lang)}
+                      {item.variant_label && <span className="text-muted"> ({tr(item.variant_label, lang)})</span>}
                     </span>
-                    <span className="tabular shrink-0">{formatPrice(item.line_total)}</span>
+                    <span className="tabular shrink-0">{formatPrice(item.line_total, lang)}</span>
                   </li>
                 ))}
               </ul>
             </dd>
           </div>
           <div className="flex items-baseline justify-between py-4">
-            <dt className="font-semibold">סה״כ</dt>
-            <dd className="tabular text-[22px] font-bold">{formatPrice(order.total)}</dd>
+            <dt className="font-semibold">{t.total}</dt>
+            <dd className="tabular text-[22px] font-bold">{formatPrice(order.total, lang)}</dd>
           </div>
         </dl>
       </div>
@@ -80,7 +87,7 @@ export default async function OrderConfirmationPage({ params }: { params: Promis
           <li className="flex items-start gap-3">
             <Phone className="mt-1 size-5 shrink-0 text-brand" />
             <span>
-              רוצים לשנות משהו? התקשרו{" "}
+              {t.change}{" "}
               <a href={telHref(settings.phone)} className="font-semibold underline underline-offset-4" dir="ltr">
                 {settings.phone}
               </a>
@@ -91,7 +98,7 @@ export default async function OrderConfirmationPage({ params }: { params: Promis
 
       <div className="mt-10">
         <LinkButton href="/" variant="secondary" size="lg">
-          חזרה לדף הבית
+          {t.home}
         </LinkButton>
       </div>
     </div>

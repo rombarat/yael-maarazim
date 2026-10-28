@@ -3,6 +3,7 @@
 import clsx from "clsx";
 import { formatDateShort, formatWeekday } from "@/lib/format";
 import type { PickupDay } from "@/lib/pickup";
+import { useLang, useT } from "@/i18n/client";
 
 type Props = {
   days: PickupDay[];
@@ -15,11 +16,13 @@ type Props = {
 
 export function PickupPicker({ days, date, time, onDate, onTime, error }: Props) {
   const selectedDay = days.find((d) => d.date === date);
+  const lang = useLang();
+  const t = useT();
 
   return (
     <div>
       <p id="pickup-date-label" className="mb-2.5 text-[15px] font-semibold">
-        יום
+        {t.checkout.day}
       </p>
       <div role="radiogroup" aria-labelledby="pickup-date-label" className="rail -mx-4 flex gap-2 overflow-x-auto px-4 pb-1 md:mx-0 md:flex-wrap md:px-0">
         {days.map((d) => {
@@ -36,9 +39,9 @@ export function PickupPicker({ days, date, time, onDate, onTime, error }: Props)
                 selected ? "border-ink bg-ink text-white" : "border-line bg-white hover:border-brand/40",
               )}
             >
-              <span className="text-[14px] font-semibold">{formatWeekday(d.date)}</span>
+              <span className="text-[14px] font-semibold">{formatWeekday(d.date, lang)}</span>
               <span className={clsx("tabular text-[15px]", selected ? "text-white/80" : "text-muted")}>
-                {formatDateShort(d.date)}
+                {formatDateShort(d.date, lang)}
               </span>
             </button>
           );
@@ -48,7 +51,7 @@ export function PickupPicker({ days, date, time, onDate, onTime, error }: Props)
       {selectedDay && (
         <>
           <p id="pickup-time-label" className="mb-2.5 mt-6 text-[15px] font-semibold">
-            שעה
+            {t.checkout.time}
           </p>
           <div role="radiogroup" aria-labelledby="pickup-time-label" className="grid grid-cols-4 gap-2 sm:grid-cols-6">
             {selectedDay.slots.map((slot) => {

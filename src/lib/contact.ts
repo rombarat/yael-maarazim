@@ -15,7 +15,3 @@ export function isContactOnly(product: Pick<Product, "price" | "variants">, cate
 export function whatsappMessageHref(phone: string, text: string) {
   return `${whatsappHref(phone)}?text=${encodeURIComponent(text)}`;
 }
-
-export function productInquiry(productName: string) {
-  return `היי ${brand.ownerName}, אשמח לפרטים על ${productName}`;
-}

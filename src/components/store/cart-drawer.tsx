@@ -10,6 +10,7 @@ import { cartTotals, useCart } from "@/lib/cart-store";
 import { formatPrice } from "@/lib/format";
 import { useCartSync } from "./use-cart-sync";
 import { CartLines } from "./cart-lines";
+import { useLang, useT } from "@/i18n/client";
 
 export function CartDrawer() {
   const router = useRouter();
@@ -17,6 +18,8 @@ export function CartDrawer() {
   const close = useCart((s) => s.closeDrawer);
   const lines = useCart((s) => s.lines);
   const { total, count, hasUnavailable } = cartTotals(lines);
+  const lang = useLang();
+  const t = useT();
   useCartSync(open);
 
   useEffect(() => {
@@ -27,13 +30,14 @@ export function CartDrawer() {
     <Drawer
       open={open}
       onClose={close}
-      title="הסל שלך"
+      title={t.cart.title}
+      closeLabel={t.cart.close}
       footer={
         lines.length > 0 && (
           <div className="space-y-3">
             <div className="flex items-baseline justify-between">
-              <span className="text-muted">סה״כ ({count} פריטים)</span>
-              <span className="tabular text-[22px] font-bold">{formatPrice(total)}</span>
+              <span className="text-muted">{t.cart.total(count)}</span>
+              <span className="tabular text-[22px] font-bold">{formatPrice(total, lang)}</span>
             </div>
             <Button
               size="lg"
@@ -44,9 +48,9 @@ export function CartDrawer() {
                 router.push("/checkout");
               }}
             >
-              להמשך הזמנה
+              {t.cart.continue}
             </Button>
-            {hasUnavailable && <p className="text-center text-[14px] text-alert">הסירו את המוצרים שאזלו כדי להמשיך.</p>}
+            {hasUnavailable && <p className="text-center text-[14px] text-alert">{t.cart.removeSoldOut}</p>}
           </div>
         )
       }
@@ -54,8 +58,8 @@ export function CartDrawer() {
       {lines.length === 0 ? (
         <EmptyState
           icon={<ShoppingBag className="size-6" />}
-          title="הסל עדיין ריק"
-          body="מוסיפים מוצרים מהקטלוג והם יופיעו כאן."
+          title={t.cart.emptyTitle}
+          body={t.cart.emptyBody}
           action={
             <Button
               variant="secondary"
@@ -64,7 +68,7 @@ export function CartDrawer() {
                 router.push("/");
               }}
             >
-              לכל המוצרים
+              {t.cart.browse}
             </Button>
           }
         />

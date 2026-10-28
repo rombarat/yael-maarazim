@@ -10,7 +10,7 @@ type Item = { id: string; name: string };
  * works before JavaScript loads); while scrolling, the chip of the section on screen is highlighted
  * and kept in view.
  */
-export function CategoryNav({ items }: { items: Item[] }) {
+export function CategoryNav({ items, label }: { items: Item[]; label: string }) {
   const [active, setActive] = useState(items[0]?.id ?? "");
   const railRef = useRef<HTMLDivElement>(null);
   /** Set while a click scrolls the page, so the observer doesn't flicker through the sections in between. */
@@ -44,7 +44,7 @@ export function CategoryNav({ items }: { items: Item[] }) {
   }, [active]);
 
   return (
-    <nav aria-label="קטגוריות" className="sticky top-[72px] z-30 border-b border-line bg-paper/95 backdrop-blur-md md:top-20">
+    <nav aria-label={label} className="sticky top-[72px] z-30 border-b border-line bg-paper/95 backdrop-blur-md md:top-20">
       <div ref={railRef} className="rail mx-auto flex max-w-[1200px] gap-2 overflow-x-auto px-4 py-3 md:px-8">
         {items.map((item) => (
           <a
