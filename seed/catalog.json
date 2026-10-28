@@ -1,0 +1,919 @@
+{
+  "settings": {
+    "phone": "058-6164000",
+    "email": "shohamyael@gmail.com",
+    "instagram_url": "https://www.instagram.com/yael_metukim_beahava",
+    "pickup_address": "",
+    "pickup_notes": "כתובת האיסוף תישלח אליכם עם אישור ההזמנה.",
+    "delivery_enabled": false,
+    "delivery_notes": "משלוחים בתשלום לגדרה, יבנה, חבל יבנה, נחל שורק והסביבה. את דמי המשלוח נתאם איתכם בטלפון.",
+    "min_lead_hours": 48,
+    "max_days_ahead": 60,
+    "slot_interval_minutes": 60,
+    "time_zone": "Asia/Jerusalem",
+    "weekly_hours": {
+      "0": {
+        "open": true,
+        "start": "09:00",
+        "end": "19:00"
+      },
+      "1": {
+        "open": true,
+        "start": "09:00",
+        "end": "19:00"
+      },
+      "2": {
+        "open": true,
+        "start": "09:00",
+        "end": "19:00"
+      },
+      "3": {
+        "open": true,
+        "start": "09:00",
+        "end": "19:00"
+      },
+      "4": {
+        "open": true,
+        "start": "09:00",
+        "end": "19:00"
+      },
+      "5": {
+        "open": true,
+        "start": "08:00",
+        "end": "13:00"
+      },
+      "6": {
+        "open": false,
+        "start": "09:00",
+        "end": "13:00"
+      }
+    },
+    "facebook_url": "https://www.facebook.com/profile.php?id=100091793666627"
+  },
+  "categories": [
+    {
+      "name": "מארזים מפנקים",
+      "image": "heart-square.webp"
+    },
+    {
+      "name": "מארזי לידה",
+      "image": "fruit-cradle.webp"
+    },
+    {
+      "name": "עוגות לאירועים",
+      "image": "number-fruit.webp"
+    },
+    {
+      "name": "עוגות מוס וגבינה",
+      "image": "mousse-3.webp"
+    },
+    {
+      "name": "קינוחי חלבון",
+      "image": "p-lotus.webp"
+    },
+    {
+      "name": "מגשי אירוח",
+      "image": "h-tortilla.webp"
+    },
+    {
+      "name": "בלונים ותוספות",
+      "image": "b-mylar-3.webp"
+    }
+  ],
+  "products": [
+    {
+      "category": "מארזים מפנקים",
+      "name": "לב שוקולד מלא הפתעות",
+      "description": "לב שוקולד גדול שממלאים בהפתעות מתוקות, עם כיתוב אישי על הלב. מגיע בקופסה מלאה סוכריות.",
+      "price": 190,
+      "unit_label": "קופסה 24×24 ס״מ",
+      "image": "surprise-heart.webp",
+      "is_featured": true
+    },
+    {
+      "category": "מארזים מפנקים",
+      "name": "לב בריבוע",
+      "description": "ארבעה לבבות שוקולד בצבעים שונים שנפגשים לריבוע אחד, עם מקרונים מסביב.",
+      "price": 240,
+      "unit_label": "קופסה 25×25 ס״מ",
+      "image": "heart-square.webp",
+      "is_featured": true
+    },
+    {
+      "category": "מארזים מפנקים",
+      "name": "עוגת 8 הטעמים",
+      "description": "שמונה פרוסות עוגה בשמונה טעמים שונים, בקופסה אחת. מתאים לאירוח ולמתנה.",
+      "price": 310,
+      "unit_label": "קופסה 25×25 ס״מ",
+      "image": "eight-flavors.webp",
+      "is_featured": true
+    },
+    {
+      "category": "מארזים מפנקים",
+      "name": "מארז תות",
+      "description": "לבבות שוקולד, מקרונים, כדורי שוקולד ותותים טריים. זמין בעונת התותים.",
+      "price": 250,
+      "unit_label": "קופסה 25×25 ס״מ",
+      "image": "strawberry-box.webp",
+      "tags": [
+        "בעונה"
+      ]
+    },
+    {
+      "category": "מארזים מפנקים",
+      "name": "מארז אלון",
+      "description": "מארז גדול עם לבבות שוקולד ״באהבה״, קרם ברולה, טראפלס, עוגיות וקינוחים אישיים.",
+      "price": 300,
+      "unit_label": "קופסה 30×43 ס״מ",
+      "image": "box-alon.webp"
+    },
+    {
+      "category": "מארזים מפנקים",
+      "name": "מארז סחלב",
+      "description": "לב שוקולד לבן עם כיתוב אישי, פאי פקאן, קרם ברולה בלבבות וקינוחים קטנים.",
+      "price": 250,
+      "unit_label": "קופסה 25×25 ס״מ",
+      "image": "box-sachlav.webp"
+    },
+    {
+      "category": "מארזים מפנקים",
+      "name": "מארז מרגנית",
+      "description": "לב שוקולד, קרם ברולה, ארטיקים מצופים, מקרונים ופינוקי שוקולד.",
+      "price": 175,
+      "unit_label": "קופסה 25×25 ס״מ",
+      "image": "box-marganit.webp"
+    },
+    {
+      "category": "מארזים מפנקים",
+      "name": "מארז אירוס",
+      "description": "קרם ברולה בלב, קינוחים אישיים, ביגלה בשוקולד, לב שוקולד ווורד.",
+      "price": 170,
+      "unit_label": "קופסה 25×25 ס״מ",
+      "image": "box-irus.webp",
+      "is_featured": true
+    },
+    {
+      "category": "מארזים מפנקים",
+      "name": "מארז שיבולת",
+      "description": "תאים של מקרונים, טראפלס, קרם ברולה וקינוחים אישיים.",
+      "price": 160,
+      "unit_label": "קופסה 25×25 ס״מ",
+      "image": "box-shibolet.webp"
+    },
+    {
+      "category": "מארזים מפנקים",
+      "name": "מארז אהבה",
+      "description": "שלושה לבבות שוקולד בקופסה מוארכת, עם הכיתוב ״באהבה״ ומקרונים ביניהם.",
+      "price": 160,
+      "unit_label": "קופסה 30×10 ס״מ",
+      "image": "love-box.webp"
+    },
+    {
+      "category": "מארזים מפנקים",
+      "name": "מארז ורד",
+      "description": "מקרונים, לב שוקולד עם כיתוב, קרם ברולה, כדורי שוקולד ווורד.",
+      "price": 120,
+      "unit_label": "קופסה 20×20 ס״מ",
+      "image": "box-vered.webp"
+    },
+    {
+      "category": "מארזים מפנקים",
+      "name": "לב פינוקים",
+      "description": "מגש בצורת לב עם כדורי קוקוס, טראפלס ופרלינים, ופרח קטן באמצע.",
+      "price": 120,
+      "unit_label": "מגש לב 24×24 ס״מ",
+      "image": "heart-tray.webp"
+    },
+    {
+      "category": "מארזים מפנקים",
+      "name": "מארז נרקיס",
+      "description": "קרם ברולה בלבבות, לב שוקולד, ביגלה בשוקולד ופרח.",
+      "price": 95,
+      "unit_label": "קופסה 20×20 ס״מ",
+      "image": "box-narkis.webp"
+    },
+    {
+      "category": "מארזים מפנקים",
+      "name": "מארז סביון",
+      "description": "מארז קטן: לב שוקולד, קינוח אישי, מקרון וכדור שוקולד.",
+      "price": 65,
+      "unit_label": "קופסה 11×11 ס״מ",
+      "image": "box-savyon.webp"
+    },
+    {
+      "category": "מארזי לידה",
+      "name": "עיצוב מתוקים ליולדת",
+      "description": "עריסה מלאה מתוקים, דובי ומגבת רקומה, בעיצוב חגיגי לכבוד התינוק החדש.",
+      "price": 330,
+      "unit_label": "עיצוב",
+      "image": "birth-sweets.webp"
+    },
+    {
+      "category": "מארזי לידה",
+      "name": "עיצוב פירות ליולדת",
+      "description": "עיצוב פירות חגיגי עם עריסה, דובי ופינוקים קטנים מסביב.",
+      "price": 390,
+      "unit_label": "עיצוב",
+      "image": "birth-fruit.webp",
+      "is_featured": true
+    },
+    {
+      "category": "מארזי לידה",
+      "name": "עריסת פירות",
+      "description": "עריסה מלאה פירות חתוכים ומעוצבים, עם בקבוק תינוק וסרט. בוחרים ורוד או תכלת.",
+      "price": 300,
+      "unit_label": "עריסה",
+      "image": "fruit-cradle.webp",
+      "is_featured": true,
+      "variants": [
+        {
+          "id": "pink",
+          "label": "ורוד",
+          "price": 300
+        },
+        {
+          "id": "blue",
+          "label": "תכלת",
+          "price": 300
+        }
+      ]
+    },
+    {
+      "category": "מארזי לידה",
+      "name": "ארוחה מפנקת ליולדת",
+      "description": "ארוחה שלמה בקופסה: שקשוקה, סלט, טורטיה, ממרחים וקינוחים קטנים.",
+      "price": 170,
+      "unit_label": "קופסה 25×35 ס״מ",
+      "image": "birth-meal.webp"
+    },
+    {
+      "category": "מארזי לידה",
+      "name": "ארוחה זוגית מפנקת",
+      "description": "ארוחה לשניים בקופסה גדולה: סלט, טורטיות, מאפים, ממרחים, שתייה וקינוחים.",
+      "price": 300,
+      "unit_label": "קופסה 35×43 ס״מ",
+      "image": "couple-meal.webp"
+    },
+    {
+      "category": "עוגות לאירועים",
+      "name": "עוגת אומברה רוזטות",
+      "description": "עוגה עגולה בקוטר כ־24 ס״מ, מעוטרת ברוזטות קצפת ובכיתוב אישי. אפשר להזמין מגוון עיצובים.",
+      "price": 360,
+      "unit_label": "עוגה בקוטר 24 ס״מ",
+      "image": "cake-ombre-rosettes.webp",
+      "is_featured": true
+    },
+    {
+      "category": "עוגות לאירועים",
+      "name": "עוגת בת מצווה",
+      "description": "עוגה עגולה בקוטר כ־24 ס״מ עם דריפ, כתר ושם החוגגת.",
+      "price": 480,
+      "unit_label": "עוגה בקוטר 24 ס״מ",
+      "image": "bat-mitzva.webp"
+    },
+    {
+      "category": "עוגות לאירועים",
+      "name": "עוגת בר מצווה",
+      "description": "עוגה עגולה בקוטר כ־24 ס״מ בעיצוב הכותל, עם תפילין משוקולד ושם החוגג.",
+      "price": 450,
+      "unit_label": "עוגה בקוטר 24 ס״מ",
+      "image": "bar-mitzva.webp"
+    },
+    {
+      "category": "עוגות לאירועים",
+      "name": "עוגת מספרים A3",
+      "description": "עוגת מספרים מעוטרת בשוקולדים, מקרונים וקצפת. ספרה אחת בגודל A3 או שתי ספרות בגודל A4, בקופסה 30×43 ס״מ.",
+      "price": 360,
+      "unit_label": "עוגה",
+      "image": "number-a3.webp",
+      "variants": [
+        {
+          "id": "parve",
+          "label": "פרווה",
+          "price": 360
+        },
+        {
+          "id": "dairy",
+          "label": "חלבי",
+          "price": 380
+        }
+      ]
+    },
+    {
+      "category": "עוגות לאירועים",
+      "name": "עוגת מספרים אומברה",
+      "description": "עוגת מספרים מעוטרת ברוזטות קצפת בגווני אומברה. ספרה אחת בגודל A3 או שתי ספרות בגודל A4, בקופסה 30×43 ס״מ. אפשר להזמין מגוון עיצובים.",
+      "price": 380,
+      "unit_label": "עוגה",
+      "image": "number-ombre.webp",
+      "is_featured": false,
+      "variants": [],
+      "tags": [
+        "פרווה"
+      ]
+    },
+    {
+      "category": "עוגות לאירועים",
+      "name": "עוגת מספרים פירות ושוקולדים",
+      "description": "עוגת מספרים מעוטרת בפירות טריים, שוקולדים ופינוקים. ספרה אחת בגודל A3 או שתי ספרות בגודל A4, בקופסה 30×43 ס״מ.",
+      "price": 360,
+      "unit_label": "עוגה",
+      "image": "number-fruit.webp",
+      "is_featured": true,
+      "variants": [
+        {
+          "id": "parve",
+          "label": "פרווה",
+          "price": 360
+        },
+        {
+          "id": "dairy",
+          "label": "חלבי",
+          "price": 380
+        }
+      ]
+    },
+    {
+      "category": "עוגות לאירועים",
+      "name": "קופסת חגיגה",
+      "description": "עוגה מלבנית בכל עיצוב שתבחרו: דמות אהובה, תמונה מודפסת או כיתוב אישי.",
+      "price": 240,
+      "unit_label": "עוגה בקופסה",
+      "image": "cake-celebration.webp",
+      "variants": [
+        {
+          "id": "25x35",
+          "label": "25×35 ס״מ",
+          "price": 240
+        },
+        {
+          "id": "30x43",
+          "label": "30×43 ס״מ",
+          "price": 315
+        }
+      ]
+    },
+    {
+      "category": "עוגות לאירועים",
+      "name": "מלבנית גדולה",
+      "description": "עוגה מלבנית גדולה בעיצוב אישי, עם קצפת וקישוטי שוקולד.",
+      "price": 400,
+      "unit_label": "עוגה 30×40 ס״מ",
+      "image": "cake-large.webp"
+    },
+    {
+      "category": "עוגות לאירועים",
+      "name": "סמאש קייק",
+      "description": "עוגת קאפקייק גדולה עם קצפת ונר מספר, ליום הולדת ראשון ולכל חגיגה.",
+      "price": 280,
+      "unit_label": "עוגה",
+      "image": "cake-smash.webp"
+    },
+    {
+      "category": "עוגות לאירועים",
+      "name": "ריבועי שוקולד",
+      "description": "ריבועי עוגת שוקולד עם סוכריות צבעוניות וכיתוב אישי לפי בחירה.",
+      "price": 240,
+      "unit_label": "מגש 25×35 ס״מ",
+      "image": "choc-squares.webp"
+    },
+    {
+      "category": "עוגות מוס וגבינה",
+      "name": "עוגת מוס בטעם אחד",
+      "description": "עוגת מוס חלקה עם ציפוי וכיתוב אישי.",
+      "price": 190,
+      "unit_label": "עוגה",
+      "image": "mousse-1.webp",
+      "variants": [
+        {
+          "id": "d15",
+          "label": "קוטר 15 ס״מ",
+          "price": 190
+        },
+        {
+          "id": "d18",
+          "label": "קוטר 18 ס״מ",
+          "price": 230
+        },
+        {
+          "id": "d20",
+          "label": "קוטר 20 ס״מ",
+          "price": 270
+        }
+      ]
+    },
+    {
+      "category": "עוגות מוס וגבינה",
+      "name": "עוגת מוס 2 טעמים",
+      "description": "שתי שכבות מוס בשני טעמים, עם ציפוי שוקולד ופינוקים מלמעלה.",
+      "price": 220,
+      "unit_label": "עוגה",
+      "image": "mousse-2.webp",
+      "variants": [
+        {
+          "id": "d15",
+          "label": "קוטר 15 ס״מ",
+          "price": 220
+        },
+        {
+          "id": "d18",
+          "label": "קוטר 18 ס״מ",
+          "price": 260
+        },
+        {
+          "id": "d20",
+          "label": "קוטר 20 ס״מ",
+          "price": 300
+        }
+      ]
+    },
+    {
+      "category": "עוגות מוס וגבינה",
+      "name": "עוגת מוס 3 טעמים",
+      "description": "שלוש שכבות מוס בשלושה טעמים, עם פינוקים וכיתוב אישי.",
+      "price": 250,
+      "unit_label": "עוגה",
+      "image": "mousse-3.webp",
+      "is_featured": true,
+      "variants": [
+        {
+          "id": "d15",
+          "label": "קוטר 15 ס״מ",
+          "price": 250
+        },
+        {
+          "id": "d18",
+          "label": "קוטר 18 ס״מ",
+          "price": 290
+        },
+        {
+          "id": "d20",
+          "label": "קוטר 20 ס״מ",
+          "price": 350
+        }
+      ]
+    },
+    {
+      "category": "עוגות מוס וגבינה",
+      "name": "עוגת גבינה אפויה",
+      "description": "עוגת גבינה אפויה וקרמית עם שפת קצפת.",
+      "price": 200,
+      "unit_label": "עוגה",
+      "image": "cheesecake-baked.webp",
+      "tags": [
+        "חלבי"
+      ],
+      "variants": [
+        {
+          "id": "d18",
+          "label": "קוטר 18 ס״מ",
+          "price": 200
+        },
+        {
+          "id": "d20",
+          "label": "קוטר 20 ס״מ",
+          "price": 230
+        },
+        {
+          "id": "d22",
+          "label": "קוטר 22 ס״מ",
+          "price": 260
+        }
+      ]
+    },
+    {
+      "category": "עוגות מוס וגבינה",
+      "name": "עוגת גבינה פירורים",
+      "description": "עוגת גבינה קרה עם פירורים, קצפת ותותים טריים.",
+      "price": 160,
+      "unit_label": "עוגה",
+      "image": "cheesecake-crumb.webp",
+      "tags": [
+        "חלבי"
+      ],
+      "variants": [
+        {
+          "id": "d15",
+          "label": "קוטר 15 ס״מ",
+          "price": 160
+        },
+        {
+          "id": "d18",
+          "label": "קוטר 18 ס״מ",
+          "price": 190
+        },
+        {
+          "id": "d20",
+          "label": "קוטר 20 ס״מ",
+          "price": 230
+        }
+      ]
+    },
+    {
+      "category": "קינוחי חלבון",
+      "name": "מגולגלות דובאי",
+      "description": "100 קלוריות ו־4 גרם חלבון ליחידה.",
+      "price": 50,
+      "unit_label": "מגש",
+      "image": "p-dubai.webp",
+      "tags": [
+        "פרווה",
+        "מינימום סוכר",
+        "מינימום פחמימות"
+      ]
+    },
+    {
+      "category": "קינוחי חלבון",
+      "name": "מגולגלות שוקולד",
+      "description": "100 קלוריות ו־4 גרם חלבון ליחידה.",
+      "price": 50,
+      "unit_label": "מגש",
+      "image": "p-choc-rolls.webp",
+      "tags": [
+        "פרווה",
+        "מינימום סוכר",
+        "מינימום פחמימות"
+      ]
+    },
+    {
+      "category": "קינוחי חלבון",
+      "name": "קראנץ׳ בייגלה לוטוס",
+      "description": "140 קלוריות ו־7.5 גרם חלבון ליחידה.",
+      "price": 55,
+      "unit_label": "מגש",
+      "image": "p-lotus.webp",
+      "tags": [
+        "פרווה",
+        "מינימום סוכר",
+        "מינימום פחמימות"
+      ],
+      "is_featured": true
+    },
+    {
+      "category": "קינוחי חלבון",
+      "name": "חיתוכיות שוקולד",
+      "description": "40 קלוריות ו־3.3 גרם חלבון ליחידה.",
+      "price": 55,
+      "unit_label": "מגש",
+      "image": "p-choc-bars.webp",
+      "tags": [
+        "פרווה",
+        "מינימום סוכר",
+        "מינימום פחמימות"
+      ]
+    },
+    {
+      "category": "קינוחי חלבון",
+      "name": "כדורי חמאת בוטנים",
+      "description": "85 קלוריות ו־4 גרם חלבון ליחידה.",
+      "price": 80,
+      "unit_label": "מגש",
+      "image": "p-peanut.webp",
+      "tags": [
+        "פרווה",
+        "מינימום סוכר",
+        "מינימום פחמימות"
+      ]
+    },
+    {
+      "category": "קינוחי חלבון",
+      "name": "כדורי רפאלו",
+      "description": "45 קלוריות ו־4 גרם חלבון ליחידה.",
+      "price": 45,
+      "unit_label": "מגש",
+      "image": "p-raffaello.webp",
+      "tags": [
+        "פרווה",
+        "מינימום סוכר",
+        "מינימום פחמימות"
+      ]
+    },
+    {
+      "category": "קינוחי חלבון",
+      "name": "חטיף סניקרס",
+      "description": "120 קלוריות ו־5.5 גרם חלבון ליחידה.",
+      "price": 60,
+      "unit_label": "מגש",
+      "image": "p-snickers.webp",
+      "tags": [
+        "פרווה",
+        "מינימום סוכר",
+        "מינימום פחמימות"
+      ]
+    },
+    {
+      "category": "קינוחי חלבון",
+      "name": "עוגת קינמון",
+      "description": "190 קלוריות ו־7.5 גרם חלבון ליחידה.",
+      "price": 25,
+      "unit_label": "מגש",
+      "image": "p-cinnamon.webp",
+      "tags": [
+        "פרווה",
+        "מינימום סוכר",
+        "מינימום פחמימות"
+      ]
+    },
+    {
+      "category": "מגשי אירוח",
+      "name": "מגש טורטיות",
+      "description": "20 חצאי טורטיה במילוי לבחירה: גבינות, אבוקדו או חביתה.",
+      "price": 200,
+      "unit_label": "20 חצאים",
+      "image": "h-tortilla.webp",
+      "tags": [
+        "חלבי"
+      ],
+      "is_featured": true
+    },
+    {
+      "category": "מגשי אירוח",
+      "name": "מגש קרואסונים",
+      "description": "15 קרואסונים ממולאים במגש.",
+      "price": 225,
+      "unit_label": "15 במגש",
+      "image": "h-croissant.webp",
+      "tags": [
+        "חלבי"
+      ],
+      "variants": [
+        {
+          "id": "cheese-tuna",
+          "label": "גבינות או טונה",
+          "price": 225
+        },
+        {
+          "id": "salmon",
+          "label": "סלמון",
+          "price": 250
+        }
+      ]
+    },
+    {
+      "category": "מגשי אירוח",
+      "name": "מגש פיתות ביס",
+      "description": "12 פיתות ביס במילוי לבחירה: סביח, חביתה או טונה.",
+      "price": 180,
+      "unit_label": "12 במגש",
+      "image": "h-pita.webp",
+      "tags": [
+        "חלבי"
+      ]
+    },
+    {
+      "category": "מגשי אירוח",
+      "name": "מגש לחמניות ביס",
+      "description": "12 לחמניות ביס במילוי לבחירה: גבינות, טונה או סביח.",
+      "price": 180,
+      "unit_label": "12 במגש",
+      "image": "h-buns.webp",
+      "tags": [
+        "חלבי"
+      ]
+    },
+    {
+      "category": "מגשי אירוח",
+      "name": "לחמניות שום",
+      "description": "מגש לחמניות רכות בשמן זית, שום ועשבי תיבול.",
+      "price": 180,
+      "unit_label": "מגש",
+      "image": "h-garlic.webp",
+      "tags": [
+        "חלבי"
+      ]
+    },
+    {
+      "category": "מגשי אירוח",
+      "name": "פיצות אישיות",
+      "description": "16 פיצות אישיות עם תוספות.",
+      "price": 160,
+      "unit_label": "16 במגש",
+      "image": "h-pizza.webp",
+      "tags": [
+        "חלבי"
+      ]
+    },
+    {
+      "category": "מגשי אירוח",
+      "name": "פוקאצ׳ות אישיות",
+      "description": "16 פוקאצ׳ות אישיות עם תוספות.",
+      "price": 150,
+      "unit_label": "16 במגש",
+      "image": "h-focaccia.webp",
+      "tags": [
+        "חלבי"
+      ]
+    },
+    {
+      "category": "מגשי אירוח",
+      "name": "קישים אישיים",
+      "description": "35 קישים אישיים בטעמים שונים.",
+      "price": 240,
+      "unit_label": "35 במגש",
+      "image": "h-mini-quiche.webp",
+      "tags": [
+        "חלבי"
+      ]
+    },
+    {
+      "category": "מגשי אירוח",
+      "name": "קיש גדול",
+      "description": "קיש בקוטר 24 ס״מ.",
+      "price": 200,
+      "unit_label": "קיש בקוטר 24 ס״מ",
+      "image": "h-quiche.webp",
+      "tags": [
+        "חלבי"
+      ]
+    },
+    {
+      "category": "מגשי אירוח",
+      "name": "מגש אנטיפסטי",
+      "description": "ירקות קלויים בתנור: פלפלים, קישואים, חצילים, בטטה ובצל סגול.",
+      "price": 180,
+      "unit_label": "מגש",
+      "image": "h-antipasti.webp"
+    },
+    {
+      "category": "מגשי אירוח",
+      "name": "פלטת ירקות חיים",
+      "description": "ירקות טריים וחתוכים עם מטבלים.",
+      "price": 200,
+      "unit_label": "פלטה",
+      "image": "h-veg.webp"
+    },
+    {
+      "category": "מגשי אירוח",
+      "name": "מארז מטבלים מחולק",
+      "description": "ארבעה מטבלים בקופסה אחת מחולקת.",
+      "price": 120,
+      "unit_label": "מארז",
+      "image": "h-dips.webp",
+      "tags": [
+        "חלבי"
+      ]
+    },
+    {
+      "category": "מגשי אירוח",
+      "name": "סלט לבחירה",
+      "description": "קערת סלט גדולה של 2.5 ליטר.",
+      "price": 200,
+      "unit_label": "2.5 ליטר",
+      "image": "h-salad.webp",
+      "variants": [
+        {
+          "id": "greek",
+          "label": "סלט יווני",
+          "price": 200
+        },
+        {
+          "id": "lettuce-fruit",
+          "label": "חסה ופירות העונה",
+          "price": 200
+        },
+        {
+          "id": "cabbage-nuts",
+          "label": "כרובים ופיצוחים",
+          "price": 200
+        },
+        {
+          "id": "bulgur",
+          "label": "בורגול",
+          "price": 200
+        },
+        {
+          "id": "cherry",
+          "label": "עגבניות שרי צבעוניות",
+          "price": 200
+        }
+      ]
+    },
+    {
+      "category": "מגשי אירוח",
+      "name": "נודלס וירקות מוקפצים",
+      "description": "מגש נודלס מוקפץ עם רצועות ירקות צבעוניים.",
+      "price": 180,
+      "unit_label": "מגש",
+      "image": "h-noodles.webp"
+    },
+    {
+      "category": "מגשי אירוח",
+      "name": "שקשוקה",
+      "description": "שקשוקה של 9 עד 10 ביצים בתבנית.",
+      "price": 200,
+      "unit_label": "תבנית",
+      "image": "h-shakshuka.webp",
+      "tags": [
+        "חלבי"
+      ]
+    },
+    {
+      "category": "מגשי אירוח",
+      "name": "פסטה מוקרמת",
+      "description": "תבנית פסטה מוקרמת ברוטב לבחירה.",
+      "price": 200,
+      "unit_label": "תבנית",
+      "image": "h-pasta.webp",
+      "tags": [
+        "חלבי"
+      ],
+      "variants": [
+        {
+          "id": "rosa",
+          "label": "רוטב רוזה",
+          "price": 200
+        },
+        {
+          "id": "cream-mushroom",
+          "label": "שמנת פטריות",
+          "price": 200
+        }
+      ]
+    },
+    {
+      "category": "מגשי אירוח",
+      "name": "פילה סלמון בעיטור ירקות ואגוזים",
+      "description": "פילה סלמון שלם בציפוי פירורים, מוקף ירקות קלויים ואגוזים.",
+      "price": 360,
+      "unit_label": "תבנית",
+      "image": "h-salmon.webp"
+    },
+    {
+      "category": "בלונים ותוספות",
+      "name": "בלון הליום מיילר",
+      "description": "בלון מיילר מנופח בהליום, להוספה למארז או לבד.",
+      "price": 35,
+      "unit_label": "בלון",
+      "image": "b-mylar.webp"
+    },
+    {
+      "category": "בלונים ותוספות",
+      "name": "מיילר ו־3 בלונים צבעוניים",
+      "description": "בלון מיילר עם שלושה בלונים צבעוניים בהליום.",
+      "price": 50,
+      "unit_label": "זר בלונים",
+      "image": "b-mylar-3.webp"
+    },
+    {
+      "category": "בלונים ותוספות",
+      "name": "בלונים צבעוניים",
+      "description": "בלוני לטקס צבעוניים מנופחים בהליום.",
+      "price": 7,
+      "unit_label": "בלון",
+      "image": "b-latex.webp",
+      "variants": [
+        {
+          "id": "one",
+          "label": "בלון אחד",
+          "price": 7
+        },
+        {
+          "id": "three",
+          "label": "3 בלונים",
+          "price": 18
+        }
+      ]
+    },
+    {
+      "category": "בלונים ותוספות",
+      "name": "מרכז שולחן מבלונים",
+      "description": "מרכז שולחן מבלונים בצבעים לבחירה.",
+      "price": 50,
+      "unit_label": "מרכז שולחן",
+      "image": "b-center.webp"
+    },
+    {
+      "category": "בלונים ותוספות",
+      "name": "הדפסת דף סוכר",
+      "description": "תמונה או ברכה מודפסת על דף סוכר אכיל, להוספה לעוגה.",
+      "price": 30,
+      "unit_label": "דף",
+      "image": "b-sugar.webp"
+    },
+    {
+      "category": "בלונים ותוספות",
+      "name": "בקבוק יין",
+      "description": "בקבוק יין להוספה למארז.",
+      "price": 45,
+      "unit_label": "בקבוק",
+      "image": "b-wine.webp"
+    },
+    {
+      "category": "בלונים ותוספות",
+      "name": "דובי",
+      "description": "דובי פרווה רך להוספה למארז.",
+      "price": 45,
+      "unit_label": "דובי",
+      "image": "b-teddy.webp"
+    },
+    {
+      "category": "בלונים ותוספות",
+      "name": "תפוח מגולף",
+      "description": "תפוח עם כיתוב או ציור מגולף, למשל ״תודה״ או ״חג שמח״.",
+      "price": 25,
+      "unit_label": "תפוח",
+      "image": "b-apple.webp"
+    }
+  ],
+  "sampleOrders": []
+}
