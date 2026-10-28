@@ -3,7 +3,8 @@ import { notFound } from "next/navigation";
 import { Check, MapPin, Phone } from "lucide-react";
 import { LinkButton } from "@/components/ui/button";
 import { getSettings } from "@/lib/catalog";
-import { getOrderSummary } from "@/lib/admin-data";
+import { getOrder, getOrderSummary } from "@/lib/admin-data";
+import { deliveryFeeFromNotes } from "@/config/delivery";
 import { formatDateLong, formatPrice, telHref } from "@/lib/format";
 import { localizeSettings, tr } from "@/i18n/catalog";
 import { messages } from "@/i18n/messages";
@@ -17,8 +18,10 @@ export default async function OrderConfirmationPage({ params }: { params: Promis
   const { id } = await params;
   if (!/^[0-9a-f-]{36}$/i.test(id)) notFound();
 
-  const [order, rawSettings, lang] = await Promise.all([getOrderSummary(id), getSettings(), getLang()]);
-  if (!order) notFound();
+  const [order, full, rawSettings, lang] = await Promise.all([getOrderSummary(id), getOrder(id), getSettings(), getLang()]);
+  if (!order || !full) notFound();
+  // The stored total is the items only; a delivery fee is recorded in the notes (see config/delivery.ts).
+  const deliveryFee = order.fulfillment_type === "delivery" ? deliveryFeeFromNotes(full.notes) : 0;
   const settings = localizeSettings(rawSettings, lang);
   const t = messages[lang].order;
 
@@ -60,20 +63,22 @@ export default async function OrderConfirmationPage({ params }: { params: Promis
               </ul>
             </dd>
           </div>
+          {deliveryFee > 0 && (
+            <div className="flex justify-between gap-4 py-4">
+              <dt>{t.deliveryFee}</dt>
+              <dd className="tabular">{formatPrice(deliveryFee, lang)}</dd>
+            </div>
+          )}
           <div className="flex items-baseline justify-between py-4">
             <dt className="font-semibold">{t.total}</dt>
-            <dd className="tabular text-[22px] font-bold">{formatPrice(order.total, lang)}</dd>
+            <dd className="tabular text-[22px] font-bold">{formatPrice(Number(order.total) + deliveryFee, lang)}</dd>
           </div>
         </dl>
       </div>
 
+      {t.paymentNote && <p className="mt-4 rounded-lg bg-blush px-4 py-3 font-semibold text-brand-dark">{t.paymentNote}</p>}
+
       <ul className="mt-6 space-y-3 text-[16px]">
-        {order.fulfillment_type === "delivery" && settings.delivery_notes && (
-          <li className="flex items-start gap-3">
-            <MapPin className="mt-1 size-5 shrink-0 text-brand" />
-            <span>{settings.delivery_notes}</span>
-          </li>
-        )}
         {order.fulfillment_type === "pickup" && (settings.pickup_address || settings.pickup_notes) && (
           <li className="flex items-start gap-3">
             <MapPin className="mt-1 size-5 shrink-0 text-brand" />

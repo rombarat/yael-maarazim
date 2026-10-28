@@ -17,6 +17,8 @@ export function orderErrorMessage(raw: string | undefined, lang: Lang = "he") {
       return m.name;
     case "INVALID_ADDRESS":
       return m.address;
+    case "INVALID_AREA":
+      return m.area;
     case "DELIVERY_DISABLED":
       return m.deliveryDisabled;
     case "INVALID_PHONE":

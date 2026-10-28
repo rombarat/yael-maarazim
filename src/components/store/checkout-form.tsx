@@ -20,6 +20,7 @@ import type { BlockedDate, BusinessSettings } from "@/lib/types";
 import { CartLines } from "./cart-lines";
 import { PickupPicker } from "./pickup-picker";
 import { useCartSync } from "./use-cart-sync";
+import { deliveryAreas, findDeliveryArea } from "@/config/delivery";
 import { useLang, useT } from "@/i18n/client";
 import { STORE_TOASTER } from "./store-toaster";
 import { messages } from "@/i18n/messages";
@@ -41,10 +42,10 @@ const makeSchema = (e: CheckoutErrors) =>
     accepted: z.literal(true, { error: e.accepted }),
   });
 
-type ErrorKey = "name" | "phone" | "notes" | "pickup" | "address" | "accepted";
+type ErrorKey = "name" | "phone" | "notes" | "pickup" | "area" | "address" | "accepted";
 type Errors = Partial<Record<ErrorKey, string>>;
 /** Order of the fields on the page, to scroll to the first problem. */
-const FIELD_ORDER: ErrorKey[] = ["address", "pickup", "name", "phone", "notes", "accepted"];
+const FIELD_ORDER: ErrorKey[] = ["area", "address", "pickup", "name", "phone", "notes", "accepted"];
 
 export function CheckoutForm({ settings, blocked }: { settings: BusinessSettings; blocked: BlockedDate[] }) {
   const router = useRouter();
@@ -67,6 +68,7 @@ export function CheckoutForm({ settings, blocked }: { settings: BusinessSettings
   const [notes, setNotes] = useState("");
   const [fulfillment, setFulfillment] = useState<"pickup" | "delivery">("pickup");
   const [address, setAddress] = useState("");
+  const [areaId, setAreaId] = useState("");
   const [accepted, setAccepted] = useState(false);
   const [errors, setErrors] = useState<Errors>({});
   const [submitting, setSubmitting] = useState(false);
@@ -88,6 +90,8 @@ export function CheckoutForm({ settings, blocked }: { settings: BusinessSettings
 
   const closed = !settings.accepting_orders;
   const delivery = settings.delivery_enabled && fulfillment === "delivery";
+  const area = delivery ? findDeliveryArea(lang, areaId) : null;
+  const deliveryFee = area?.fee ?? 0;
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -103,8 +107,9 @@ export function CheckoutForm({ settings, blocked }: { settings: BusinessSettings
       accepted,
     });
     // Checked on its own so it shows together with the other errors, not only after they are fixed.
-    const addressMissing = delivery && address.trim().length < 6;
-    if (!parsed.success || addressMissing) {
+    const addressMissing = delivery && address.trim().length < 3;
+    const areaMissing = delivery && !area;
+    if (!parsed.success || addressMissing || areaMissing) {
       const next: Errors = {};
       for (const issue of parsed.success ? [] : parsed.error.issues) {
         const key = issue.path[0];
@@ -112,6 +117,7 @@ export function CheckoutForm({ settings, blocked }: { settings: BusinessSettings
         else if (FIELD_ORDER.includes(key as ErrorKey)) next[key as ErrorKey] ??= issue.message;
       }
       if (addressMissing) next.address ??= c.errors.address;
+      if (areaMissing) next.area ??= c.errors.area;
       setErrors(next);
       const firstId = FIELD_ORDER.find((k) => next[k]) ?? "notes";
       document.getElementById(firstId)?.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -128,6 +134,7 @@ export function CheckoutForm({ settings, blocked }: { settings: BusinessSettings
       time: parsed.data.time,
       fulfillment: parsed.data.fulfillment,
       address: parsed.data.address,
+      area: area?.id ?? null,
       accepted_terms: true,
       items: lines
         .filter((l) => !l.unavailable)
@@ -142,6 +149,7 @@ export function CheckoutForm({ settings, blocked }: { settings: BusinessSettings
         sync(await fetchCartProducts(lines.map((l) => l.productId)).catch(() => []));
       }
       if (res.error === "INVALID_ADDRESS") setErrors({ address: message });
+      if (res.error === "INVALID_AREA") setErrors({ area: message });
       if (isSlotError(res.error)) {
         setTime(null);
         setErrors({ pickup: message });
@@ -204,7 +212,31 @@ export function CheckoutForm({ settings, blocked }: { settings: BusinessSettings
             </div>
             {delivery && (
               <div className="mt-5 space-y-3">
-                {settings.delivery_notes && <p className="text-[15px] text-muted">{settings.delivery_notes}</p>}
+                <Field label={c.area} htmlFor="area" error={errors.area}>
+                  <select
+                    id="area"
+                    name="area"
+                    value={areaId}
+                    onChange={(e) => {
+                      setAreaId(e.target.value);
+                      if (errors.area) setErrors((er) => ({ ...er, area: undefined }));
+                    }}
+                    aria-invalid={!!errors.area}
+                    className={clsx(
+                      "h-12 w-full rounded-xl border bg-white px-4 text-[17px] text-ink transition-colors focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/15",
+                      errors.area ? "border-alert" : "border-line",
+                    )}
+                  >
+                    <option value="" disabled>
+                      {c.areaChoose}
+                    </option>
+                    {deliveryAreas[lang].map((a) => (
+                      <option key={a.id} value={a.id}>
+                        {lang === "en" ? a.en : a.he} ({formatPrice(a.fee, lang)})
+                      </option>
+                    ))}
+                  </select>
+                </Field>
                 <Field label={c.address} htmlFor="address" error={errors.address} hint={c.addressHint}>
                   <Input
                     id="address"
@@ -338,13 +370,24 @@ export function CheckoutForm({ settings, blocked }: { settings: BusinessSettings
               {delivery ? c.delivery : c.pickup}: {formatDateLong(date, lang)}, <span className="tabular">{time}</span>
             </p>
           )}
+          {delivery && (
+            <>
+              <div className="flex items-baseline justify-between text-[16px]">
+                <span className="text-muted">{c.subtotal}</span>
+                <span className="tabular">{formatPrice(total, lang)}</span>
+              </div>
+              <div className="flex items-baseline justify-between text-[16px]">
+                <span className="text-muted">{area ? c.deliveryTo(lang === "en" ? area.en : area.he) : c.delivery}</span>
+                <span className="tabular">{area ? formatPrice(deliveryFee, lang) : c.areaChoose}</span>
+              </div>
+            </>
+          )}
           <div className="flex items-baseline justify-between">
             <span className="font-semibold">{c.totalToPay}</span>
-            <span className="tabular text-[24px] font-bold">{formatPrice(total, lang)}</span>
+            <span className="tabular text-[24px] font-bold">{formatPrice(total + deliveryFee, lang)}</span>
           </div>
-          <p className="text-[14px] text-muted">
-            {delivery ? c.noPaymentNowDelivery : c.noPaymentNow}
-          </p>
+          <p className="text-[14px] text-muted">{c.noPaymentNow}</p>
+          {c.paymentNote && <p className="rounded-lg bg-blush px-3 py-2 text-[15px] font-semibold text-brand-dark">{c.paymentNote}</p>}
         </div>
 
         <div className="mt-5">

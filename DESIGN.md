@@ -46,3 +46,11 @@ A button in the header switches the storefront to English (a `lang` cookie; the 
   edits shows its Hebrew text on the English site until an English line is added there.
 - Orders are stored with the Hebrew product names, so the admin reads them as before.
 - Legal pages stay in Hebrew, with a one-line note on the English site.
+
+## Delivery fees
+Areas and fees live in `src/config/delivery.ts`: one list for the Hebrew site and one for the English site
+(Kerem B'Yavne and Givat Washington, priced for overseas students). At checkout the customer picks an area
+and the fee is added to the total. The order is saved with the area in front of the street address and
+a first notes line such as "משלוח לגדרה: ₪40", so the admin shows both without changes. The stored order
+total is still the items only. The English checkout and confirmation say payment is by PayPal, with a 7%
+fee for paying in a foreign currency. The admin's "delivery notes" text is no longer shown to customers.
