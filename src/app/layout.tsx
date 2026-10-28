@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Rubik, Suez_One } from "next/font/google";
+import { Assistant, Fredoka, Rubik, Suez_One } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
 import { IS_DEMO } from "@/lib/demo";
@@ -18,6 +18,19 @@ const rubik = Rubik({
   display: "swap",
 });
 
+/** Storefront faces: rounded like the logo lettering, and a calm text face. The admin keeps Suez One + Rubik. */
+const fredoka = Fredoka({
+  subsets: ["hebrew", "latin"],
+  variable: "--font-fredoka",
+  display: "swap",
+});
+
+const assistant = Assistant({
+  subsets: ["hebrew", "latin"],
+  variable: "--font-assistant",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: {
     default: brand.meta.title,
@@ -29,14 +42,14 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#fffaf7",
+  themeColor: "#ffffff",
   width: "device-width",
   initialScale: 1,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="he" dir="rtl" data-scroll-behavior="smooth" className={`${suez.variable} ${rubik.variable}`}>
+    <html lang="he" dir="rtl" data-scroll-behavior="smooth" className={`${suez.variable} ${rubik.variable} ${fredoka.variable} ${assistant.variable}`}>
       <body>
         {children}
         <Toaster

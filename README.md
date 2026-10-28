@@ -13,16 +13,17 @@ npm run dev                                    # http://localhost:3000, admin at
 Stop `npm run dev` before running other `npm run db:*` commands against the local database.
 
 ## Make it a business
-- `src/config/brand.ts` — name, copy, logo, hero/story photos
-- `src/app/globals.css` (`@theme`) — colours; `src/app/layout.tsx` — fonts
+- `src/config/brand.ts` — name, copy, logo, story photo, categories ordered by WhatsApp
+- `src/app/globals.css` — colours (`.store` for the storefront, `@theme` for the admin); `src/app/layout.tsx` — fonts
 - `seed/catalog.json` + `seed/images/` — products, categories, hours, contact
-- `public/brand/` — logo, icon, hero and story photos
+- `public/brand/` — logo, icon and story photo
 
 ## Commands
 | Command | What it does |
 |---|---|
 | `npm run db:setup` | create/upgrade tables (safe to re-run) |
 | `npm run db:seed` | replace the catalog from `seed/` (keeps orders) |
+| `npm run db:add-new` | add only categories/products from `seed/` that the database doesn't have yet (changes nothing else) |
 | `npm run db:reset` | catalog + delete orders + sample orders |
 | `npm run admin:create -- <email> <password>` | create an admin or reset its password |
 

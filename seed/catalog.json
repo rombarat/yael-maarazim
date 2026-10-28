@@ -5,7 +5,7 @@
     "instagram_url": "https://www.instagram.com/yael_metukim_beahava",
     "pickup_address": "",
     "pickup_notes": "כתובת האיסוף תישלח אליכם עם אישור ההזמנה.",
-    "delivery_enabled": false,
+    "delivery_enabled": true,
     "delivery_notes": "משלוחים בתשלום לגדרה, יבנה, חבל יבנה, נחל שורק והסביבה. את דמי המשלוח נתאם איתכם בטלפון.",
     "min_lead_hours": 48,
     "max_days_ahead": 60,
@@ -76,8 +76,16 @@
       "image": "h-tortilla.webp"
     },
     {
+      "name": "עיצובי פירות לאירועים",
+      "image": "fruit-tray.webp"
+    },
+    {
       "name": "בלונים ותוספות",
       "image": "b-mylar-3.webp"
+    },
+    {
+      "name": "סדנאות",
+      "image": "workshop-fruit.webp"
     }
   ],
   "products": [
@@ -913,6 +921,42 @@
       "price": 25,
       "unit_label": "תפוח",
       "image": "b-apple.webp"
+    },
+    {
+      "category": "עיצובי פירות לאירועים",
+      "name": "מגש פירות מעוצב",
+      "description": "מגש עגול מפירות העונה, עם פרחי מלון, אננס ופיטאיה. בגדלים לכל אירוע.",
+      "price": 0,
+      "image": "fruit-tray.webp",
+      "is_featured": false
+    },
+    {
+      "category": "עיצובי פירות לאירועים",
+      "name": "סירת פירות",
+      "description": "סירת עץ ארוכה מלאה פירות חתוכים ומגולפים: ענבים, מלון, קיווי ותפוחים. מרכז שולחן לאירוע.",
+      "price": 0,
+      "image": "fruit-boat.webp"
+    },
+    {
+      "category": "סדנאות",
+      "name": "סדנת פירות לילדים ולמבוגרים",
+      "description": "כל משתתף מעצב מגש פירות משלו ולוקח אותו הביתה. מתאים לימי הולדת, לקבוצות ולאירועי חברה.",
+      "price": 0,
+      "image": "workshop-fruit.webp"
+    },
+    {
+      "category": "סדנאות",
+      "name": "סדנת עוגת מספרים",
+      "description": "מכינים יחד עוגת מספרים ומקשטים אותה בקרם, פירות ושוקולדים.",
+      "price": 0,
+      "image": "number-ombre.webp"
+    },
+    {
+      "category": "סדנאות",
+      "name": "סדנאות מתוקות",
+      "description": "עוגיות מקושטות, קאפקייקס מעוצבים, עוגת לבובו, עוגה מעוצבת וקינוחים. בוחרים יחד את הסדנה שמתאימה לקבוצה.",
+      "price": 0,
+      "image": "cake-ombre-rosettes.webp"
     }
   ],
   "sampleOrders": []

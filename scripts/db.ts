@@ -2,6 +2,7 @@
  * Database CLI.
  *   npm run db:setup                     create/upgrade tables (idempotent)
  *   npm run db:seed                      replace the catalog with seed/catalog.json (keeps orders)
+ *   npm run db:add-new                   add only the categories/products the database doesn't have yet
  *   npm run db:reset                     catalog + wipe orders + sample orders (demo / fresh start)
  *   npm run admin:create -- <email> <password>   create the admin or reset its password
  *
@@ -12,7 +13,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { getDb } from "../src/server/db-core";
 import { hashPassword } from "../src/server/passwords";
-import { readCatalog, seedCatalog, seedSampleOrders } from "../src/server/seed";
+import { addMissingFromCatalog, readCatalog, seedCatalog, seedSampleOrders } from "../src/server/seed";
 
 async function loadEnv() {
   // Minimal .env.local loader so the CLI sees the same DATABASE_URL as Next.js.
@@ -47,6 +48,12 @@ async function main() {
       console.log(`✓ seeded ${catalog.categories.length} categories, ${catalog.products.length} products into ${where}`);
       break;
     }
+    case "add-new": {
+      const added = await addMissingFromCatalog(db, await readCatalog());
+      console.log(`✓ added to ${where}: ${added.categories.length} categories, ${added.products.length} products`);
+      for (const name of [...added.categories, ...added.products]) console.log(`  + ${name}`);
+      break;
+    }
     case "reset": {
       const catalog = await readCatalog();
       await seedCatalog(db, catalog, { wipeOrders: true });
@@ -69,7 +76,7 @@ async function main() {
       break;
     }
     default:
-      console.error("commands: setup | seed | reset | admin <email> <password>");
+      console.error("commands: setup | seed | add-new | reset | admin <email> <password>");
       process.exit(1);
   }
   await db.close();

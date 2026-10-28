@@ -1,28 +1,29 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
-import { Plus } from "lucide-react";
+import { MessageCircle, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { useCart } from "@/lib/cart-store";
 import { useProductDialog } from "@/lib/product-dialog";
+import { productInquiry, whatsappMessageHref } from "@/lib/contact";
 import { productPriceLabel } from "@/lib/format";
 import type { Product } from "@/lib/types";
 
-export function ProductCard({ product, priority = false }: { product: Product; priority?: boolean }) {
+type Props = {
+  product: Product;
+  /** Ordered by WhatsApp instead of the cart (workshops, price on request). */
+  contactOnly?: boolean;
+  phone?: string;
+  priority?: boolean;
+};
+
+export function ProductCard({ product, contactOnly = false, phone = "", priority = false }: Props) {
   const openDialog = useProductDialog((s) => s.open);
   const add = useCart((s) => s.add);
   const openDrawer = useCart((s) => s.openDrawer);
-  const href = `/product/${product.id}`;
   const needsChoice = product.variants.length > 0;
   const soldOut = !product.is_available;
-
-  // Details open in a dialog over the list; the link still works for new tabs and without JavaScript.
-  const showDetails = (e: React.MouseEvent) => {
-    if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-    e.preventDefault();
-    openDialog(product.id);
-  };
+  const showPrice = !contactOnly || Number(product.price) > 0;
 
   const quickAdd = () => {
     if (needsChoice) {
@@ -35,54 +36,71 @@ export function ProductCard({ product, priority = false }: { product: Product; p
 
   return (
     <article className="group flex flex-col">
-      <div className="relative">
-        <Link
-          href={href}
-          onClick={showDetails}
-          className="relative block aspect-[4/5] overflow-hidden rounded-[var(--radius-photo)] bg-surface"
-          tabIndex={-1}
-          aria-hidden="true"
-        >
+      {/* The photo and the name open the details; the link keeps working in a new tab. */}
+      <a
+        href={`/?product=${product.id}`}
+        onClick={(e) => {
+          if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+          e.preventDefault();
+          openDialog(product.id);
+        }}
+        className="flex flex-1 flex-col rounded-[var(--radius-photo)]"
+      >
+        <div className="relative aspect-square overflow-hidden rounded-[var(--radius-photo)] bg-surface">
           {product.image_url && (
             <Image
               src={product.image_url}
               alt=""
               fill
               priority={priority}
-              sizes="(min-width: 1024px) 280px, (min-width: 640px) 33vw, 50vw"
+              sizes="(min-width: 1024px) 270px, (min-width: 640px) 33vw, 50vw"
               className={
                 soldOut
                   ? "object-cover opacity-55 grayscale-[60%]"
-                  : "object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+                  : "object-cover transition-transform duration-300 ease-out group-hover:scale-[1.03]"
               }
             />
           )}
-        </Link>
-        {soldOut ? (
-          <span className="pointer-events-none absolute start-3 top-3 rounded-full bg-white/95 px-3 py-1 text-[13px] font-semibold text-ink">
-            אזל כרגע
-          </span>
-        ) : (
-          <button
-            type="button"
-            onClick={quickAdd}
-            className="absolute bottom-2.5 end-2.5 flex size-11 items-center justify-center rounded-full bg-white text-ink shadow-[0_2px_10px_rgba(42,27,23,0.18)] transition-colors hover:bg-brand hover:text-white"
-            aria-label={needsChoice ? `בחירת אפשרות עבור ${product.name}` : `הוספת ${product.name} לסל`}
-          >
-            <Plus className="size-5" strokeWidth={2.25} />
-          </button>
-        )}
-      </div>
-
-      <Link href={href} onClick={showDetails} className="mt-3 flex flex-1 flex-col rounded-md">
-        {product.tags.length > 0 && <p className="mb-0.5 text-[13px] font-semibold text-success">{product.tags.join(", ")}</p>}
-        <h3 className="line-clamp-2 text-[16px] font-semibold leading-snug md:text-[17px]">{product.name}</h3>
-        <div className="mt-1 flex items-baseline justify-between gap-2">
-          <span className="tabular text-[16px] font-bold text-brand">{productPriceLabel(product)}</span>
-          {product.unit_label && <span className="truncate text-[13px] text-muted">{product.unit_label}</span>}
+          {soldOut && (
+            <span className="absolute start-2.5 top-2.5 rounded-full bg-white px-3 py-1 text-[14px] font-semibold">אזל כרגע</span>
+          )}
         </div>
-        {soldOut && <span className="sr-only">אזל כרגע</span>}
-      </Link>
+        <h3 className="mt-3 font-display text-[18px] font-medium leading-snug md:text-[19px]">{product.name}</h3>
+        {product.unit_label && <p className="mt-0.5 text-[15px] leading-snug text-muted">{product.unit_label}</p>}
+        {product.tags.length > 0 && <p className="mt-0.5 text-[14px] font-semibold text-success">{product.tags.join(", ")}</p>}
+      </a>
+
+      {contactOnly ? (
+        <div className="mt-2">
+          {showPrice && <p className="tabular mb-2 font-display text-[19px] font-semibold">{productPriceLabel(product)}</p>}
+          {phone && (
+            <a
+              href={whatsappMessageHref(phone, productInquiry(product.name))}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex h-11 w-full items-center justify-center gap-2 rounded-full border border-brand/30 px-3 text-[16px] font-semibold text-brand transition-colors hover:bg-blush"
+              aria-label={`תיאום ${product.name} בוואטסאפ`}
+            >
+              <MessageCircle className="size-[18px] shrink-0" strokeWidth={2} />
+              לתיאום בוואטסאפ
+            </a>
+          )}
+        </div>
+      ) : (
+        <div className="mt-2 flex min-h-11 items-center justify-between gap-2">
+          <span className="tabular font-display text-[19px] font-semibold">{productPriceLabel(product)}</span>
+          {!soldOut && (
+            <button
+              type="button"
+              onClick={quickAdd}
+              className="flex size-11 shrink-0 items-center justify-center rounded-full bg-brand text-white transition-colors hover:bg-brand-dark active:scale-[0.96]"
+              aria-label={needsChoice ? `בחירת גודל עבור ${product.name}` : `הוספת ${product.name} לסל`}
+            >
+              <Plus className="size-5" strokeWidth={2.5} />
+            </button>
+          )}
+        </div>
+      )}
     </article>
   );
 }

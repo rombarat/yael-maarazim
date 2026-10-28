@@ -71,8 +71,8 @@ export function CheckoutForm({ settings, blocked }: { settings: BusinessSettings
       <EmptyState
         icon={<ShoppingBag className="size-6" />}
         title="הסל ריק"
-        body="כדי להזמין, הוסיפו קודם מוצרים מהחנות."
-        action={<LinkButton href="/shop">לחנות</LinkButton>}
+        body="כדי להזמין, הוסיפו קודם מוצרים מהקטלוג."
+        action={<LinkButton href="/">לכל המוצרים</LinkButton>}
       />
     );
   }

@@ -2,9 +2,10 @@
 
 import { useEffect, useMemo, useRef } from "react";
 import Image from "next/image";
-import { Clock, Phone, ShoppingBag, X } from "lucide-react";
+import { Clock, MessageCircle, Phone, ShoppingBag, X } from "lucide-react";
 import { useModal } from "@/components/ui/use-modal";
 import { productIdFromUrl, syncProductDialogFromUrl, useProductDialog } from "@/lib/product-dialog";
+import { isContactOnly, productInquiry, whatsappMessageHref } from "@/lib/contact";
 import { productPriceLabel, telHref } from "@/lib/format";
 import type { BusinessSettings, Category, Product } from "@/lib/types";
 import { AddToCart } from "./add-to-cart";
@@ -19,6 +20,7 @@ export function ProductDialog({ products, categories, settings }: Props) {
   const ids = useMemo(() => new Set(products.map((p) => p.id)), [products]);
   const product = products.find((p) => p.id === productId) ?? null;
   const category = product ? categories.find((c) => c.id === product.category_id) : null;
+  const contactOnly = product ? isContactOnly(product, category?.name) : false;
 
   // Deep link (?product=<id>) on first load, then follow back/forward.
   useEffect(() => {
@@ -67,10 +69,12 @@ export function ProductDialog({ products, categories, settings }: Props) {
 
           <div className="flex flex-col px-5 pt-6 md:px-8 md:pt-10">
             {category && <p className="text-[15px] font-semibold text-brand">{category.name}</p>}
-            <h2 id="product-dialog-title" className="mt-1 font-display text-[30px] leading-[1.1] md:text-[38px]">
+            <h2 id="product-dialog-title" className="mt-1 font-display text-[30px] font-semibold leading-[1.1] md:text-[38px]">
               {product.name}
             </h2>
-            <p className="tabular mt-3 text-[22px] font-bold">{productPriceLabel(product)}</p>
+            {(!contactOnly || Number(product.price) > 0) && (
+              <p className="tabular mt-3 font-display text-[24px] font-semibold">{productPriceLabel(product)}</p>
+            )}
             {product.unit_label && <p className="text-[15px] text-muted">{product.unit_label}</p>}
 
             {product.tags.length > 0 && (
@@ -85,33 +89,61 @@ export function ProductDialog({ products, categories, settings }: Props) {
 
             {product.description && <p className="mt-5 text-[17px] leading-[1.75]">{product.description}</p>}
 
-            <ul className="mt-6 space-y-2.5 border-t border-line pt-5 text-[15px] text-ink/85">
-              <li className="flex items-center gap-3">
-                <ShoppingBag className="size-[18px] shrink-0 text-brand" strokeWidth={1.75} />
-                {settings.delivery_enabled ? "איסוף עצמי או משלוח, בוחרים יום ושעה בסיום ההזמנה" : "איסוף עצמי, בוחרים יום ושעה בסיום ההזמנה"}
-              </li>
-              {settings.min_lead_hours > 0 && (
-                <li className="flex items-center gap-3">
-                  <Clock className="size-[18px] shrink-0 text-brand" strokeWidth={1.75} />
-                  מזמינים לפחות {settings.min_lead_hours} שעות מראש
-                </li>
-              )}
-              {settings.phone && (
-                <li className="flex items-center gap-3">
-                  <Phone className="size-[18px] shrink-0 text-brand" strokeWidth={1.75} />
-                  <span>
-                    שאלות על המוצר?{" "}
-                    <a href={telHref(settings.phone)} className="font-semibold underline-offset-4 hover:underline" dir="ltr">
-                      {settings.phone}
+{contactOnly ? (
+              <div className="mt-6 border-t border-line pb-8 pt-5">
+                <p className="text-[17px]">כל הזמנה כאן מותאמת אישית. כתבו לי ונתאם יחד את הפרטים והמחיר.</p>
+                {settings.phone && (
+                  <div className="mt-4 flex flex-wrap gap-3">
+                    <a
+                      href={whatsappMessageHref(settings.phone, productInquiry(product.name))}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex h-12 items-center gap-2 rounded-full bg-brand px-6 text-[17px] font-semibold text-white transition-colors hover:bg-brand-dark"
+                    >
+                      <MessageCircle className="size-5" strokeWidth={2} aria-hidden="true" />
+                      לתיאום בוואטסאפ
                     </a>
-                  </span>
-                </li>
-              )}
-            </ul>
+                    <a
+                      href={telHref(settings.phone)}
+                      className="inline-flex h-12 items-center gap-2 rounded-full border border-line px-6 text-[17px] font-semibold transition-colors hover:bg-surface"
+                    >
+                      <Phone className="size-5" strokeWidth={1.75} aria-hidden="true" />
+                      <span dir="ltr">{settings.phone}</span>
+                    </a>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <>
+                <div className="mt-6">
+                  <AddToCart key={product.id} product={product} inDialog onAdded={close} />
+                </div>
 
-            <div className="mt-6 flex-1">
-              <AddToCart key={product.id} product={product} inDialog onAdded={close} />
-            </div>
+                <ul className="mb-8 mt-5 space-y-2.5 border-t border-line pt-5 text-[16px] text-ink/85 md:mt-0">
+                  <li className="flex items-center gap-3">
+                    <ShoppingBag className="size-[18px] shrink-0 text-brand" strokeWidth={1.75} />
+                    {settings.delivery_enabled ? "משלוח או איסוף עצמי, בוחרים יום ושעה בסיום ההזמנה" : "איסוף עצמי, בוחרים יום ושעה בסיום ההזמנה"}
+                  </li>
+                  {settings.min_lead_hours > 0 && (
+                    <li className="flex items-center gap-3">
+                      <Clock className="size-[18px] shrink-0 text-brand" strokeWidth={1.75} />
+                      מזמינים לפחות {settings.min_lead_hours} שעות מראש
+                    </li>
+                  )}
+                  {settings.phone && (
+                    <li className="flex items-center gap-3">
+                      <Phone className="size-[18px] shrink-0 text-brand" strokeWidth={1.75} />
+                      <span>
+                        שאלות על המוצר?{" "}
+                        <a href={telHref(settings.phone)} className="font-semibold underline-offset-4 hover:underline" dir="ltr">
+                          {settings.phone}
+                        </a>
+                      </span>
+                    </li>
+                  )}
+                </ul>
+              </>
+            )}
           </div>
         </div>
       </div>

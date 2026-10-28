@@ -9,6 +9,7 @@
     "lint": "eslint",
     "db:setup": "tsx scripts/db.ts setup",
     "db:seed": "tsx scripts/db.ts seed",
+    "db:add-new": "tsx scripts/db.ts add-new",
     "db:reset": "tsx scripts/db.ts reset",
     "admin:create": "tsx scripts/db.ts admin",
     "setup": "tsx scripts/db.ts setup && tsx scripts/db.ts seed"

@@ -5,6 +5,7 @@
   --color-brand: #cf3232;
   --color-brand-dark: #a8262a;
   --color-accent: #e08b8b;
+  --color-blush: #fdeeee;
   --color-success: #4f6b32;
   --color-success-soft: #edf2e4;
   --color-alert: #a3204e;
@@ -42,6 +43,33 @@
   0% { transform: scale(1); }
   40% { transform: scale(1.25); }
   100% { transform: scale(1); }
+}
+
+/*
+ * Storefront theme. Wraps the (store) layout only, so the admin keeps the tokens above.
+ * White like the logo badge, the logo's red and black, its pink hearts, the grass the boxes sit on.
+ */
+.store {
+  --color-ink: #231f20;
+  --color-brand: #c4262c;
+  --color-brand-dark: #a11d22;
+  --color-accent: #f2b8b8;
+  --color-blush: #fdeeee;
+  --color-success: #3f6b2a;
+  --color-success-soft: #eaf1e2;
+  --color-paper: #ffffff;
+  --color-surface: #f7f2f1;
+  --color-line: #ece3e2;
+  --color-muted: #6b6061;
+  --font-display: var(--font-fredoka), system-ui, sans-serif;
+  --font-sans: var(--font-assistant), system-ui, sans-serif;
+  --radius-photo: 14px;
+
+  min-height: 100dvh;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 18px;
 }
 
 html {

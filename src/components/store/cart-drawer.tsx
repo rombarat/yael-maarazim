@@ -55,13 +55,13 @@ export function CartDrawer() {
         <EmptyState
           icon={<ShoppingBag className="size-6" />}
           title="הסל עדיין ריק"
-          body="מוסיפים מוצרים מהחנות והם יופיעו כאן."
+          body="מוסיפים מוצרים מהקטלוג והם יופיעו כאן."
           action={
             <Button
               variant="secondary"
               onClick={() => {
                 close();
-                router.push("/shop");
+                router.push("/");
               }}
             >
               לכל המוצרים
