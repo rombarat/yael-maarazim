@@ -32,7 +32,7 @@ export function SiteHeader() {
             sizes="64px"
             className="h-12 w-auto shrink-0 md:h-16"
           />
-          <span lang="he" dir="rtl" className="truncate font-display text-[20px] font-semibold leading-none text-brand md:text-[30px]">{brand.name}</span>
+          <span className="line-clamp-2 font-display text-[20px] font-semibold leading-[1.1] text-brand ltr:text-[18px] md:text-[30px] md:leading-none ltr:md:text-[30px]">{t.brandName}</span>
         </Link>
 
         <div className="flex shrink-0 items-center gap-2">

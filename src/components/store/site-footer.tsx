@@ -119,7 +119,7 @@ export function SiteFooter({ settings, lang }: { settings: BusinessSettings; lan
       </div>
       <div className="border-t border-white/10">
         <div className="mx-auto flex max-w-[1200px] items-center justify-between px-4 py-5 text-[13px] text-[#c4a9a5] md:px-8">
-          <span>© {new Date().getFullYear()} {brand.name}</span>
+          <span>© {new Date().getFullYear()} {t.brandName}</span>
           <Link href="/admin" className="hover:text-white">
             {t.footer.admin}
           </Link>

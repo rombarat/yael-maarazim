@@ -5,6 +5,8 @@
 
 const he = {
   langSwitch: { label: "English", aria: "Switch to English" },
+  /** The business name next to the logo and in the footer. */
+  brandName: "יעל מתוקים באהבה",
 
   header: {
     home: "יעל מתוקים באהבה, לראש העמוד",
@@ -222,9 +224,10 @@ type Messages = typeof he;
 
 const en: Messages = {
   langSwitch: { label: "עברית", aria: "מעבר לעברית" },
+  brandName: "Yael's Sweets with Love",
 
   header: {
-    home: "Yael Metukim Be'ahava, back to top",
+    home: "Yael's Sweets with Love, back to top",
     cart: "Cart",
     cartWithCount: (n) => `Cart, ${n} ${n === 1 ? "item" : "items"}`,
   },
