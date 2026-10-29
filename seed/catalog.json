@@ -7,7 +7,7 @@
     "pickup_notes": "כתובת האיסוף תישלח אליכם עם אישור ההזמנה.",
     "delivery_enabled": true,
     "delivery_notes": "משלוחים בתשלום לגדרה, יבנה, חבל יבנה, נחל שורק והסביבה. את דמי המשלוח נתאם איתכם בטלפון.",
-    "min_lead_hours": 48,
+    "min_lead_hours": 24,
     "max_days_ahead": 60,
     "slot_interval_minutes": 60,
     "time_zone": "Asia/Jerusalem",
@@ -78,6 +78,9 @@
     {
       "name": "עיצובי פירות לאירועים",
       "image": "fruit-tray.webp"
+    },
+    {
+      "name": "תפריט חגים"
     },
     {
       "name": "בלונים ותוספות",

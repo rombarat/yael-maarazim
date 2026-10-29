@@ -15,7 +15,7 @@ export function SiteFooter({ settings, lang }: { settings: BusinessSettings; lan
   const t = messages[lang];
   const hours = summarizeHours(settings.weekly_hours, t.weekdays);
   return (
-    <footer className="mt-24 bg-ink text-[#f6e6e3]">
+    <footer className="mt-24 bg-forest text-[#f3ece4]">
       <div className="mx-auto grid max-w-[1200px] gap-10 px-4 py-14 md:grid-cols-[1.4fr_1fr_1fr_1fr] md:px-8">
         <div>
           <div className="flex size-28 items-center justify-center rounded-full bg-white p-2">

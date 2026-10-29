@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Clock, Phone, Store, Truck } from "lucide-react";
+import { Clock, Heart, Phone, Store, Truck } from "lucide-react";
 import { CategoryNav } from "@/components/store/category-nav";
 import { ProductCard } from "@/components/store/product-card";
 import { WhatsAppIcon } from "@/components/ui/social-icons";
@@ -7,6 +7,7 @@ import { getCategories, getProducts, getSettings } from "@/lib/catalog";
 import { isContactOnly, whatsappMessageHref } from "@/lib/contact";
 import { telHref } from "@/lib/format";
 import { brand } from "@/config/brand";
+import { testimonials } from "@/config/testimonials";
 import type { Product } from "@/lib/types";
 import { localizeProduct, localizeSettings, tr } from "@/i18n/catalog";
 import { messages } from "@/i18n/messages";
@@ -46,41 +47,45 @@ export default async function HomePage() {
             )}
           </p>
         )}
-        <h1 className="max-w-[30ch] font-display text-[26px] font-semibold leading-[1.2] md:text-[44px] md:leading-[1.15]">{t.intro.title}</h1>
-        <p className="mt-2 max-w-[56ch] text-[17px] text-muted md:mt-3 md:text-[20px]">{t.intro.line}</p>
+        <div className="rounded-[22px] bg-rose px-5 py-8 text-center md:px-12 md:py-12">
+          <h1 className="mx-auto max-w-[24ch] font-display text-[27px] md:max-w-[30ch] font-semibold leading-[1.2] text-forest md:text-[46px] md:leading-[1.15]">
+            {t.intro.title}
+          </h1>
+          <p className="mx-auto mt-3 max-w-[56ch] text-[17px] text-ink/80 md:text-[20px]">{t.intro.line}</p>
 
-        <ul className="mt-5 flex flex-col gap-2 text-[16px] sm:flex-row sm:flex-wrap sm:gap-x-8 md:mt-6 md:text-[17px]">
-          <li className="flex items-start gap-2.5">
-            {settings.delivery_enabled ? (
-              <>
-                <Truck className="mt-0.5 size-5 shrink-0 text-brand" strokeWidth={1.75} aria-hidden="true" />
-                <span>{t.intro.deliveryOrPickup(t.serviceArea)}</span>
-              </>
-            ) : (
-              <>
-                <Store className="mt-0.5 size-5 shrink-0 text-brand" strokeWidth={1.75} aria-hidden="true" />
-                <span>{t.intro.pickupOnly}</span>
-              </>
+          <ul className="mt-6 flex flex-col items-center gap-2 text-[16px] md:mt-7 md:flex-row md:flex-wrap md:justify-center md:gap-3 md:text-[17px]">
+            <li className="flex items-start gap-2 rounded-2xl bg-white/80 px-4 py-2 text-start">
+              {settings.delivery_enabled ? (
+                <>
+                  <Truck className="mt-0.5 size-5 shrink-0 text-forest" strokeWidth={1.75} aria-hidden="true" />
+                  <span>{t.intro.deliveryArea(t.serviceArea)}</span>
+                </>
+              ) : (
+                <>
+                  <Store className="mt-0.5 size-5 shrink-0 text-forest" strokeWidth={1.75} aria-hidden="true" />
+                  <span>{t.intro.pickupOnly}</span>
+                </>
+              )}
+            </li>
+            {settings.min_lead_hours > 0 && (
+              <li className="flex items-start gap-2 rounded-2xl bg-white/80 px-4 py-2 text-start">
+                <Clock className="mt-0.5 size-5 shrink-0 text-forest" strokeWidth={1.75} aria-hidden="true" />
+                <span>{t.intro.leadTime(settings.min_lead_hours)}</span>
+              </li>
             )}
-          </li>
-          {settings.min_lead_hours > 0 && (
-            <li className="flex items-start gap-2.5">
-              <Clock className="mt-0.5 size-5 shrink-0 text-brand" strokeWidth={1.75} aria-hidden="true" />
-              <span>{t.intro.leadTime(settings.min_lead_hours)}</span>
-            </li>
-          )}
-          {settings.phone && (
-            <li className="flex items-start gap-2.5">
-              <Phone className="mt-0.5 size-5 shrink-0 text-brand" strokeWidth={1.75} aria-hidden="true" />
-              <span>
-                {t.intro.questions}{" "}
-                <a href={telHref(settings.phone)} className="font-semibold underline-offset-4 hover:underline" dir="ltr">
-                  {settings.phone}
+            {settings.phone && (
+              <li>
+                <a
+                  href={telHref(settings.phone)}
+                  className="flex items-center gap-2 rounded-2xl bg-white/80 px-4 py-2 font-semibold transition-colors hover:bg-white"
+                >
+                  <Phone className="size-5 shrink-0 text-forest" strokeWidth={1.75} aria-hidden="true" />
+                  <span dir="ltr">{settings.phone}</span>
                 </a>
-              </span>
-            </li>
-          )}
-        </ul>
+              </li>
+            )}
+          </ul>
+        </div>
       </section>
 
       {sections.length > 0 && <CategoryNav label={t.categoriesNav} items={sections.map(({ id, name }) => ({ id, name: tr(name, lang) }))} />}
@@ -96,7 +101,7 @@ export default async function HomePage() {
               aria-labelledby={`cat-${section.id}-title`}
               className="scroll-mt-[136px] pt-10 md:scroll-mt-[148px] md:pt-14"
             >
-              <h2 id={`cat-${section.id}-title`} className="font-display text-[30px] font-semibold leading-tight text-brand md:text-[40px]">
+              <h2 id={`cat-${section.id}-title`} className="font-display text-[30px] font-semibold leading-tight text-forest md:text-[40px]">
                 {tr(section.name, lang)}
                 <Flourish />
               </h2>
@@ -121,21 +126,38 @@ export default async function HomePage() {
         })}
       </div>
 
+      {/* ── Good to know ── */}
+      <section aria-labelledby="good-title" className="mx-auto mt-16 max-w-[1200px] scroll-mt-40 px-4 md:mt-20 md:px-8">
+        <div className="rounded-[var(--radius-panel)] border-2 border-rose px-5 py-6 md:px-10 md:py-8">
+          <h2 id="good-title" className="font-display text-[24px] font-semibold text-forest md:text-[28px]">
+            {t.goodToKnow.title}
+          </h2>
+          <ul className="mt-3 grid gap-x-10 gap-y-2 text-[17px] md:grid-cols-2">
+            {t.goodToKnow.items.map((item) => (
+              <li key={item} className="flex items-start gap-2.5">
+                <Heart className="mt-1.5 size-3.5 shrink-0 fill-brand text-brand" aria-hidden="true" />
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
       {/* ── About + contact ── */}
       {brand.story && (
         <section id="about" aria-labelledby="about-title" className="mx-auto mt-20 max-w-[1200px] scroll-mt-28 px-4 md:mt-28 md:px-8">
-          <div className="grid items-center gap-8 overflow-hidden rounded-[var(--radius-panel)] bg-blush md:grid-cols-[1.1fr_1fr] md:gap-0">
+          <div className="grid items-center gap-8 overflow-hidden rounded-[var(--radius-panel)] bg-rose-soft md:grid-cols-[1.1fr_1fr] md:gap-0">
             {brand.story.image && (
               <div className="relative aspect-[7/4] bg-ink md:order-last md:aspect-auto md:h-full md:min-h-[320px]">
                 <Image src={brand.story.image.src} alt={t.story.imageAlt} fill sizes="(min-width: 768px) 560px, 100vw" className="object-cover" />
               </div>
             )}
             <div className="px-5 pb-8 md:px-12 md:py-12">
-              <h2 id="about-title" className="font-display text-[30px] font-semibold leading-tight text-brand md:text-[38px]">
+              <h2 id="about-title" className="font-display text-[30px] font-semibold leading-tight text-forest md:text-[38px]">
                 {t.story.title}
               </h2>
               {t.story.paragraphs.map((p, i) => (
-                <p key={i} className="mt-3 max-w-[48ch] text-[18px] leading-[1.7]">
+                <p key={i} className="mt-3 max-w-[50ch] text-[18px] leading-[1.7]">
                   {p}
                 </p>
               ))}
@@ -161,6 +183,24 @@ export default async function HomePage() {
               )}
             </div>
           </div>
+        </section>
+      )}
+
+      {/* ── Testimonials (hidden until there are some) ── */}
+      {testimonials[lang].length > 0 && (
+        <section aria-labelledby="testimonials-title" className="mx-auto mt-20 max-w-[1200px] px-4 md:mt-24 md:px-8">
+          <h2 id="testimonials-title" className="font-display text-[30px] font-semibold leading-tight text-forest md:text-[40px]">
+            {t.testimonialsTitle}
+            <Flourish />
+          </h2>
+          <ul className="mt-6 grid gap-4 md:grid-cols-3 md:gap-6">
+            {testimonials[lang].map((q, i) => (
+              <li key={i} className="rounded-[var(--radius-panel)] bg-rose-soft p-6">
+                <blockquote className="text-[17px] leading-[1.7]">{q.text}</blockquote>
+                {q.name && <p className="mt-3 font-semibold text-forest">{q.name}</p>}
+              </li>
+            ))}
+          </ul>
         </section>
       )}
     </>

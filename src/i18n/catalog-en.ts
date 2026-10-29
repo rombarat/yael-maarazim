@@ -12,6 +12,7 @@ export const catalogEn: Record<string, string> = {
   "עיצובי פירות לאירועים": "Fruit designs for events",
   "בלונים ותוספות": "Balloons & extras",
   "סדנאות": "Workshops",
+  "תפריט חגים": "Holiday menu",
   "לב שוקולד מלא הפתעות": "Surprise-filled chocolate heart",
   "לב שוקולד גדול שממלאים בהפתעות מתוקות, עם כיתוב אישי על הלב. מגיע בקופסה מלאה סוכריות.": "A large chocolate heart filled with sweet surprises, with a personal message on the heart. Comes in a box full of candy.",
   "קופסה 24×24 ס״מ": "24×24 cm box",

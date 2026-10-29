@@ -58,7 +58,7 @@ export function CategoryNav({ items, label }: { items: Item[]; label: string }) 
             }}
             className={clsx(
               "flex h-10 shrink-0 items-center rounded-full px-4 text-[16px] font-semibold transition-colors",
-              active === item.id ? "bg-ink text-white" : "bg-surface text-ink hover:bg-blush",
+              active === item.id ? "bg-forest text-white" : "bg-rose-soft text-ink hover:bg-rose",
             )}
           >
             {item.name}

@@ -34,7 +34,8 @@ const makeSchema = (e: CheckoutErrors) =>
       .string()
       .transform((v) => v.replace(/[^\d+]/g, "").replace(/^\+972/, "0"))
       .refine((v) => /^0\d{8,9}$/.test(v), e.phone),
-    notes: z.string().max(600, e.notes),
+    greeting: z.string().trim().max(250, e.greeting),
+    notes: z.string().max(300, e.notes),
     date: z.string({ error: e.date }),
     time: z.string({ error: e.time }),
     fulfillment: z.enum(["pickup", "delivery"]),
@@ -42,10 +43,10 @@ const makeSchema = (e: CheckoutErrors) =>
     accepted: z.literal(true, { error: e.accepted }),
   });
 
-type ErrorKey = "name" | "phone" | "notes" | "pickup" | "area" | "address" | "accepted";
+type ErrorKey = "name" | "phone" | "greeting" | "notes" | "pickup" | "area" | "address" | "accepted";
 type Errors = Partial<Record<ErrorKey, string>>;
 /** Order of the fields on the page, to scroll to the first problem. */
-const FIELD_ORDER: ErrorKey[] = ["area", "address", "pickup", "name", "phone", "notes", "accepted"];
+const FIELD_ORDER: ErrorKey[] = ["area", "address", "pickup", "name", "phone", "greeting", "notes", "accepted"];
 
 export function CheckoutForm({ settings, blocked }: { settings: BusinessSettings; blocked: BlockedDate[] }) {
   const router = useRouter();
@@ -65,6 +66,7 @@ export function CheckoutForm({ settings, blocked }: { settings: BusinessSettings
   const [time, setTime] = useState<string | null>(null);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [greeting, setGreeting] = useState("");
   const [notes, setNotes] = useState("");
   const [fulfillment, setFulfillment] = useState<"pickup" | "delivery">("pickup");
   const [address, setAddress] = useState("");
@@ -99,6 +101,7 @@ export function CheckoutForm({ settings, blocked }: { settings: BusinessSettings
     const parsed = schema.safeParse({
       name,
       phone,
+      greeting,
       notes,
       date: date ?? undefined,
       time: time ?? undefined,
@@ -129,6 +132,7 @@ export function CheckoutForm({ settings, blocked }: { settings: BusinessSettings
     const res = await placeOrder({
       name: parsed.data.name,
       phone: parsed.data.phone,
+      greeting: parsed.data.greeting,
       notes: parsed.data.notes,
       date: parsed.data.date,
       time: parsed.data.time,
@@ -306,6 +310,12 @@ export function CheckoutForm({ settings, blocked }: { settings: BusinessSettings
               </span>
             </p>
           )}
+          {!delivery && settings.delivery_enabled && (
+            <p className="mt-3 flex items-start gap-2 text-[15px] text-muted">
+              <Truck className="mt-1 size-4 shrink-0" />
+              <span>{t.pickupAlsoDelivery(t.serviceArea)}</span>
+            </p>
+          )}
         </section>
 
         <section aria-labelledby="details-title" className="space-y-5">
@@ -344,13 +354,27 @@ export function CheckoutForm({ settings, blocked }: { settings: BusinessSettings
               invalid={!!errors.phone}
             />
           </Field>
+          <Field label={c.greeting} htmlFor="greeting" optional optionalLabel={c.optional} error={errors.greeting} hint={c.greetingHint}>
+            <Textarea
+              id="greeting"
+              name="greeting"
+              rows={3}
+              value={greeting}
+              onChange={(e) => {
+                setGreeting(e.target.value);
+                if (errors.greeting) setErrors((er) => ({ ...er, greeting: undefined }));
+              }}
+              maxLength={250}
+              invalid={!!errors.greeting}
+            />
+          </Field>
           <Field label={c.notes} htmlFor="notes" optional optionalLabel={c.optional} error={errors.notes} hint={c.notesHint}>
             <Textarea
               id="notes"
               name="notes"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              maxLength={600}
+              maxLength={300}
               invalid={!!errors.notes}
             />
           </Field>
@@ -387,6 +411,7 @@ export function CheckoutForm({ settings, blocked }: { settings: BusinessSettings
             <span className="tabular text-[24px] font-bold">{formatPrice(total + deliveryFee, lang)}</span>
           </div>
           <p className="text-[14px] text-muted">{c.noPaymentNow}</p>
+          <p className="text-[14px] text-muted">{t.refrigerate}</p>
           {c.paymentNote && <p className="rounded-lg bg-blush px-3 py-2 text-[15px] font-semibold text-brand-dark">{c.paymentNote}</p>}
         </div>
 

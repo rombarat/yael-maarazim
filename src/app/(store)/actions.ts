@@ -11,7 +11,9 @@ import type { ActionResult, Product } from "@/lib/types";
 const orderInput = z.object({
   name: z.string().trim().min(2).max(80),
   phone: z.string().max(20),
-  notes: z.string().max(600),
+  /** Text for a greeting card that goes with the order. */
+  greeting: z.string().trim().max(250).default(""),
+  notes: z.string().max(300),
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   time: z.string().regex(/^\d{2}:\d{2}$/),
   fulfillment: z.enum(["pickup", "delivery"]),
@@ -45,15 +47,17 @@ export async function placeOrder(input: z.input<typeof orderInput>): Promise<Act
   // Delivery: the area goes in front of the street address, and the fee the customer saw goes first in the
   // notes, both in Hebrew, so the owner reads them in the admin as part of the order.
   let address: string | null = null;
-  let notes = o.notes;
+  const lines: string[] = [];
   if (o.fulfillment === "delivery") {
     const area = findDeliveryArea(lang, o.area);
     if (!area) return { ok: false, error: "INVALID_AREA" };
     address = `${area.he}, ${o.address}`;
-    notes = [deliveryNoteLine(area, lang === "en"), o.notes].filter(Boolean).join("\n");
+    lines.push(deliveryNoteLine(area, lang === "en"));
   } else if (lang === "en") {
-    notes = ["הזמנה מהאתר באנגלית", o.notes].filter(Boolean).join("\n");
+    lines.push("הזמנה מהאתר באנגלית");
   }
+  if (o.greeting) lines.push(`ברכה למשלוח: ${o.greeting}`);
+  const notes = [...lines, o.notes].filter(Boolean).join("\n");
 
   try {
     const row = await queryOne<{ r: { id: string } }>(

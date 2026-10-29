@@ -6,6 +6,9 @@
   --color-brand-dark: #a8262a;
   --color-accent: #e08b8b;
   --color-blush: #fdeeee;
+  --color-rose: #f7d9df;
+  --color-rose-soft: #fcedf0;
+  --color-forest: #2f5233;
   --color-success: #4f6b32;
   --color-success-soft: #edf2e4;
   --color-alert: #a3204e;
@@ -55,6 +58,10 @@
   --color-brand-dark: #a11d22;
   --color-accent: #f2b8b8;
   --color-blush: #fdeeee;
+  /* The pink and dark green Yael's customers know from her current branding. */
+  --color-rose: #f7d9df;
+  --color-rose-soft: #fcedf0;
+  --color-forest: #2f5233;
   --color-success: #3f6b2a;
   --color-success-soft: #eaf1e2;
   --color-paper: #ffffff;

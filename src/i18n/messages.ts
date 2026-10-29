@@ -15,14 +15,13 @@ const he = {
   intro: {
     title: "מארזים, עוגות, מגשי אירוח ועיצובי פירות, בעבודת יד ובאהבה",
     line: "כל המוצרים בכשרות מהודרת, מהחומרים הכי משובחים וטריים.",
-    deliveryOrPickup: (area: string) => `משלוחים ל${area}, או איסוף עצמי`,
+    deliveryArea: (area: string) => `משלוחים באזור ${area}`,
     pickupOnly: "איסוף עצמי",
-    leadTime: (h: number) => `מזמינים לפחות ${h} שעות מראש`,
-    questions: "שאלות?",
+    leadTime: (h: number) => `מומלץ להזמין מראש, לפחות ${h} שעות לפני`,
     closed: "כרגע לא מקבלים הזמנות דרך האתר.",
     orderByPhone: "אפשר להזמין בטלפון",
   },
-  serviceArea: "יבנה, גדרה, גן יבנה, נחל שורק, קרית מלאכי, אשדוד והסביבה",
+  serviceArea: "יבנה, גדרה, אשדוד, נחל שורק, גדרות, חבל יבנה, קרית מלאכי, גן יבנה והאזור",
 
   categoriesNav: "קטגוריות",
   more: "עוד",
@@ -31,7 +30,9 @@ const he = {
   story: {
     title: "נעים להכיר, יעל",
     paragraphs: [
-      "אני יעל, ואני מכינה מארזים מפנקים, עוגות לאירועים, עיצובי פירות ומגשי אירוח, ומעבירה סדנאות. כל הזמנה נבנית בעבודת יד, בהתאמה וביחס אישי.",
+      "מימשתי חלום וזכיתי להקים ב־10 אצבעות עסק שכולו אהבה ושמחה.",
+      "אצלי הכל נעשה מהחומרים הטריים והמשובחים ביותר, באופן מוקפד ואסתטי, בהתאמה וביחס אישי ללקוח.",
+      "המוטו שלי: לשמח את הלקוחות ואת האנשים שהמשלוחים מגיעים אליהם, שהמטעמים ימלאו לא רק את הבטן אלא גם את הלב, ויישארו עם טעם של עוד.",
     ],
     imageAlt: "יעל עומדת מאחורי סירת פירות מעוצבת עם השלט של יעל מתוקים באהבה",
     whatsapp: "כתבו לי בוואטסאפ",
@@ -56,7 +57,7 @@ const he = {
     contactNote: "כל הזמנה כאן מותאמת אישית. כתבו לי ונתאם יחד את הפרטים והמחיר.",
     deliveryOrPickup: "משלוח או איסוף עצמי, בוחרים יום ושעה בסיום ההזמנה",
     pickupOnly: "איסוף עצמי, בוחרים יום ושעה בסיום ההזמנה",
-    leadTime: (h: number) => `מזמינים לפחות ${h} שעות מראש`,
+    leadTime: (h: number) => `מומלץ להזמין מראש, לפחות ${h} שעות לפני`,
     questions: "שאלות על המוצר?",
     soldOutBody: "המוצר לא זמין להזמנה בימים אלה. שווה לבדוק שוב בקרוב.",
     chooseOption: "בחרו אפשרות",
@@ -103,7 +104,7 @@ const he = {
     addressHint: "ואם צריך גם קומה ודירה",
     whenDelivery: "מתי להביא?",
     whenPickup: "מתי לאסוף?",
-    leadTime: (h: number) => `הזמנה לפחות ${h} שעות מראש. `,
+    leadTime: (h: number) => `מומלץ להזמין מראש, לפחות ${h} שעות לפני. `,
     pickupOnly: "איסוף עצמי בלבד.",
     noSlots: "אין כרגע מועדים פנויים באתר.",
     day: "יום",
@@ -112,6 +113,8 @@ const he = {
     name: "שם מלא",
     phone: "טלפון",
     phoneHint: "נחזור אליכם למספר הזה לאישור ההזמנה",
+    greeting: "ברכה למשלוח",
+    greetingHint: "נצרף את הברכה להזמנה",
     notes: "הערות להזמנה",
     notesHint: "למשל: כיתוב על העוגה, צבעים, אלרגיות",
     optional: "(לא חובה)",
@@ -131,7 +134,8 @@ const he = {
       name: "נא למלא שם מלא",
       nameLong: "השם ארוך מדי",
       phone: "מספר טלפון לא תקין. לדוגמה: 050-1234567",
-      notes: "ההערה ארוכה מדי (עד 600 תווים)",
+      notes: "ההערה ארוכה מדי (עד 300 תווים)",
+      greeting: "הברכה ארוכה מדי (עד 250 תווים)",
       date: "בחרו יום ושעה",
       time: "בחרו שעה",
       address: "נא למלא רחוב ומספר בית",
@@ -197,6 +201,20 @@ const he = {
     hebrewOnly: "",
   },
 
+  goodToKnow: {
+    title: "חשוב לדעת",
+    items: [
+      "כל המוצרים בכשרות מהודרת.",
+      "התמונות להמחשה בלבד (הסגנון שבחרתם יישאר לפי הדוגמה).",
+      "הפירות משתנים בהתאם לעונה ולמלאי.",
+      "במארזים, הטעמים, הצבעים והקישוטים עשויים להשתנות.",
+      "רוב המוצרים באתר דורשים קירור מרגע האספקה.",
+    ],
+  },
+  testimonialsTitle: "לקוחות מספרים",
+  pickupAlsoDelivery: (area: string) => `יש גם משלוחים באזור ${area}.`,
+  refrigerate: "רוב המוצרים דורשים קירור מרגע האספקה.",
+
   weekdays: ["ראשון", "שני", "שלישי", "רביעי", "חמישי", "שישי", "שבת"],
 };
 
@@ -214,14 +232,13 @@ const en: Messages = {
   intro: {
     title: "Gift boxes, cakes, hosting trays and fruit designs, handmade with love",
     line: "Everything is strictly kosher (mehadrin), made from the finest, freshest ingredients.",
-    deliveryOrPickup: (area) => `Delivery to ${area}, or pickup`,
+    deliveryArea: (area) => `Delivery to ${area}`,
     pickupOnly: "Pickup",
-    leadTime: (h) => `Order at least ${h} hours ahead`,
-    questions: "Questions?",
+    leadTime: (h) => `We recommend ordering ahead, at least ${h} hours before`,
     closed: "We're not taking orders through the website right now.",
     orderByPhone: "You can order by phone",
   },
-  serviceArea: "Kerem B'Yavne, Givat Washington, Yavne, Gedera, Ashdod and the surrounding area",
+  serviceArea: "Yavne, Kerem B'Yavne, Givat Washington, Gedera, Ashdod, Nahal Sorek, Gderot, Kiryat Malakhi, Gan Yavne and the area",
 
   categoriesNav: "Categories",
   more: "More",
@@ -230,7 +247,9 @@ const en: Messages = {
   story: {
     title: "Hi, I'm Yael",
     paragraphs: [
-      "I make gift boxes, event cakes, fruit designs and hosting trays, and I run workshops. Every order is handmade, tailored to you, with a personal touch.",
+      "I followed a dream and built, with my own ten fingers, a business that is all love and joy.",
+      "Everything I make uses the freshest, finest ingredients, prepared with care and an eye for beauty, tailored to each customer with a personal touch.",
+      "My motto: to delight my customers and the people who receive the deliveries, so the treats fill not only the stomach but the heart, and leave a taste for more.",
     ],
     imageAlt: "Yael standing behind a designed fruit boat with the Yael Metukim Be'ahava sign",
     whatsapp: "Message me on WhatsApp",
@@ -255,7 +274,7 @@ const en: Messages = {
     contactNote: "Everything here is made to order. Message me and we'll arrange the details and price together.",
     deliveryOrPickup: "Delivery or pickup, choose the day and time at checkout",
     pickupOnly: "Pickup, choose the day and time at checkout",
-    leadTime: (h) => `Order at least ${h} hours ahead`,
+    leadTime: (h) => `We recommend ordering ahead, at least ${h} hours before`,
     questions: "Questions about this item?",
     soldOutBody: "This item can't be ordered right now. Check back soon.",
     chooseOption: "Choose an option",
@@ -302,7 +321,7 @@ const en: Messages = {
     addressHint: "Plus floor and apartment if needed",
     whenDelivery: "When should we deliver?",
     whenPickup: "When will you pick up?",
-    leadTime: (h) => `Order at least ${h} hours ahead. `,
+    leadTime: (h) => `We recommend ordering ahead, at least ${h} hours before. `,
     pickupOnly: "Pickup only.",
     noSlots: "There are no open time slots on the website right now.",
     day: "Day",
@@ -311,6 +330,8 @@ const en: Messages = {
     name: "Full name",
     phone: "Phone",
     phoneHint: "We'll call this number to confirm your order",
+    greeting: "Greeting for the delivery",
+    greetingHint: "We'll add your greeting to the order",
     notes: "Order notes",
     notesHint: "For example: text on the cake, colours, allergies",
     optional: "(optional)",
@@ -329,7 +350,8 @@ const en: Messages = {
       name: "Please enter your full name",
       nameLong: "The name is too long",
       phone: "That phone number doesn't look right. For example: 050-1234567",
-      notes: "The note is too long (up to 600 characters)",
+      notes: "The note is too long (up to 300 characters)",
+      greeting: "The greeting is too long (up to 250 characters)",
       date: "Choose a day and time",
       time: "Choose a time",
       address: "Please enter the street and house number",
@@ -394,6 +416,20 @@ const en: Messages = {
   legal: {
     hebrewOnly: "This document is available in Hebrew only.",
   },
+
+  goodToKnow: {
+    title: "Good to know",
+    items: [
+      "Everything is strictly kosher (mehadrin).",
+      "Photos are for illustration only (the style you choose will follow the example).",
+      "The fruit changes with the season and what's available.",
+      "In gift boxes, flavours, colours and decorations may vary.",
+      "Most products need refrigeration from the moment they arrive.",
+    ],
+  },
+  testimonialsTitle: "What customers say",
+  pickupAlsoDelivery: (area) => `We also deliver to ${area}.`,
+  refrigerate: "Most products need refrigeration from the moment they arrive.",
 
   weekdays: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
 };
