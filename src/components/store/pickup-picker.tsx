@@ -2,7 +2,7 @@
 
 import clsx from "clsx";
 import { formatDateShort, formatWeekday } from "@/lib/format";
-import type { PickupDay } from "@/lib/pickup";
+import { dayParts, type PickupDay } from "@/lib/pickup";
 import { useLang, useT } from "@/i18n/client";
 
 type Props = {
@@ -36,7 +36,7 @@ export function PickupPicker({ days, date, time, onDate, onTime, error }: Props)
               onClick={() => onDate(d.date)}
               className={clsx(
                 "flex h-[68px] w-[68px] shrink-0 flex-col items-center justify-center rounded-xl border transition-colors",
-                selected ? "border-ink bg-ink text-white" : "border-line bg-white hover:border-brand/40",
+                selected ? "border-forest bg-forest text-white" : "border-line bg-white hover:border-brand/40",
               )}
             >
               <span className="text-[14px] font-semibold">{formatWeekday(d.date, lang)}</span>
@@ -53,8 +53,8 @@ export function PickupPicker({ days, date, time, onDate, onTime, error }: Props)
           <p id="pickup-time-label" className="mb-2.5 mt-6 text-[15px] font-semibold">
             {t.checkout.time}
           </p>
-          <div role="radiogroup" aria-labelledby="pickup-time-label" className="grid grid-cols-4 gap-2 sm:grid-cols-6">
-            {selectedDay.slots.map((slot) => {
+          <div role="radiogroup" aria-labelledby="pickup-time-label" className="grid grid-cols-3 gap-2 sm:max-w-[420px]">
+            {dayParts(selectedDay.slots).map(({ part, time: slot }) => {
               const selected = slot === time;
               return (
                 <button
@@ -64,11 +64,11 @@ export function PickupPicker({ days, date, time, onDate, onTime, error }: Props)
                   aria-checked={selected}
                   onClick={() => onTime(slot)}
                   className={clsx(
-                    "tabular h-11 rounded-xl border text-[15px] font-semibold transition-colors",
-                    selected ? "border-ink bg-ink text-white" : "border-line bg-white hover:border-brand/40",
+                    "h-12 rounded-xl border text-[16px] font-semibold transition-colors",
+                    selected ? "border-forest bg-forest text-white" : "border-line bg-white hover:border-brand/40",
                   )}
                 >
-                  {slot}
+                  {t.checkout.parts[part]}
                 </button>
               );
             })}

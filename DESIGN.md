@@ -8,12 +8,18 @@ offers, sorted by category, like her printed catalog.
 ## Structure (one page)
 1. Header: the real logo badge next to the name, and the cart.
 2. Short intro: one sentence (h1), delivery or pickup, lead time, phone. No hero photo.
-3. Sticky category chips that follow the scroll.
-4. Every category with all its products. Details (sizes, quantity) open in a dialog over the page.
+3. The catalog as an accordion: one bar per category (photo, name, number of products); tapping it opens
+   the products below and tapping again closes it, so the page starts short. Details (sizes, quantity)
+   open in a dialog over the page.
 5. "נעים להכיר" with WhatsApp and phone, then the footer (hours, social, legal pages).
 
 Other routes are only what ordering needs: checkout, order confirmation, legal pages. `/shop` and
 `/product/<id>` redirect to the page (the product link opens its dialog).
+
+## Time of day instead of exact hours
+Checkout offers בוקר / צהריים / ערב (before 12:00, 12:00–16:00, from 16:00) for each open day. The order
+is saved with the first open slot of that part (so the database still checks hours and lead time), the
+confirmation page reads the part back from it, and the notes start with "זמן: בוקר" for the owner.
 
 ## Ordering by WhatsApp instead of the cart
 - Categories listed in `brand.contactCategories` (workshops): every item shows "לתיאום בוואטסאפ".

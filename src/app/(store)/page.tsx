@@ -1,6 +1,6 @@
 import Image from "next/image";
-import { Clock, Heart, Phone, Store, Truck } from "lucide-react";
-import { CategoryNav } from "@/components/store/category-nav";
+import { ChevronDown, Clock, Heart, Phone, Store, Truck } from "lucide-react";
+import { OpenCategoryFromHash } from "@/components/store/open-category-from-hash";
 import { ProductCard } from "@/components/store/product-card";
 import { WhatsAppIcon } from "@/components/ui/social-icons";
 import { getCategories, getProducts, getSettings } from "@/lib/catalog";
@@ -24,11 +24,14 @@ export default async function HomePage() {
     products
       .filter((p) => p.category_id === id)
       .sort((a, b) => Number(!a.is_available) - Number(!b.is_available) || a.sort_order - b.sort_order);
-  const sections: { id: string; name: string; products: Product[] }[] = categories
-    .map((c) => ({ id: c.id, name: c.name, products: byCategory(c.id) }))
+  const sections: { id: string; name: string; image: string | null; products: Product[] }[] = categories
+    .map((c) => {
+      const items = byCategory(c.id);
+      return { id: c.id, name: c.name, image: c.image_url ?? items.find((p) => p.image_url)?.image_url ?? null, products: items };
+    })
     .filter((s) => s.products.length > 0);
   const uncategorized = byCategory(null);
-  if (uncategorized.length > 0) sections.push({ id: "more", name: t.more, products: uncategorized });
+  if (uncategorized.length > 0) sections.push({ id: "more", name: t.more, image: null, products: uncategorized });
 
   return (
     <>
@@ -52,6 +55,12 @@ export default async function HomePage() {
             {t.intro.title}
           </h1>
           <p className="mx-auto mt-3 max-w-[56ch] text-[17px] text-ink/80 md:text-[20px]">{t.intro.line}</p>
+          {settings.min_lead_hours > 0 && (
+            <p className="mx-auto mt-1 flex max-w-[56ch] items-center justify-center gap-2 text-[17px] text-ink/80 md:text-[20px]">
+              <Clock className="size-5 shrink-0 text-forest" strokeWidth={1.75} aria-hidden="true" />
+              {t.intro.leadTime(settings.min_lead_hours)}
+            </p>
+          )}
 
           <ul className="mt-6 flex flex-col items-center gap-2 text-[16px] md:mt-7 md:flex-row md:flex-wrap md:justify-center md:gap-3 md:text-[17px]">
             <li className="flex items-start gap-2 rounded-2xl bg-white/80 px-4 py-2 text-start">
@@ -67,12 +76,6 @@ export default async function HomePage() {
                 </>
               )}
             </li>
-            {settings.min_lead_hours > 0 && (
-              <li className="flex items-start gap-2 rounded-2xl bg-white/80 px-4 py-2 text-start">
-                <Clock className="mt-0.5 size-5 shrink-0 text-forest" strokeWidth={1.75} aria-hidden="true" />
-                <span>{t.intro.leadTime(settings.min_lead_hours)}</span>
-              </li>
-            )}
             {settings.phone && (
               <li>
                 <a
@@ -88,40 +91,47 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {sections.length > 0 && <CategoryNav label={t.categoriesNav} items={sections.map(({ id, name }) => ({ id, name: tr(name, lang) }))} />}
-
-      {/* ── The catalog ── */}
-      <div className="mx-auto max-w-[1200px] px-4 md:px-8">
-        {sections.map((section, si) => {
+      {/* ── The catalog: one bar per category, tap to open its products ── */}
+      <div className="mx-auto max-w-[1200px] space-y-3 px-4 md:space-y-4 md:px-8">
+        <OpenCategoryFromHash />
+        {sections.map((section) => {
           const contactSection = brand.contactCategories.includes(section.name);
           return (
-            <section
+            <details
               key={section.id}
               id={`cat-${section.id}`}
-              aria-labelledby={`cat-${section.id}-title`}
-              className="scroll-mt-[136px] pt-10 md:scroll-mt-[148px] md:pt-14"
+              className="group scroll-mt-24 rounded-[var(--radius-panel)] bg-rose-soft open:bg-white open:ring-2 open:ring-rose"
             >
-              <h2 id={`cat-${section.id}-title`} className="font-display text-[30px] font-semibold leading-tight text-forest md:text-[40px]">
-                {tr(section.name, lang)}
-                <Flourish />
-              </h2>
-              {contactSection && (
-                <p className="mt-2 max-w-[56ch] text-[17px] text-muted">
-                  {t.contactSectionNote}
-                </p>
-              )}
-              <div className="mt-6 grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-4 lg:gap-x-6 lg:gap-y-10">
-                {section.products.map((p, i) => (
-                  <ProductCard
-                    key={p.id}
-                    product={localizeProduct(p, lang)}
-                    contactOnly={isContactOnly(p, section.name)}
-                    phone={settings.phone}
-                    priority={si === 0 && i < 4}
-                  />
-                ))}
+              <summary className="flex min-h-[76px] cursor-pointer list-none items-center gap-3 rounded-[var(--radius-panel)] px-3 py-3 transition-colors hover:bg-rose md:gap-4 md:px-4 [&::-webkit-details-marker]:hidden">
+                <span className="relative size-14 shrink-0 overflow-hidden rounded-full bg-white md:size-16">
+                  {section.image && <Image src={section.image} alt="" fill sizes="64px" className="object-cover" />}
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block font-display text-[21px] font-semibold leading-tight text-forest md:text-[26px]">
+                    {tr(section.name, lang)}
+                  </span>
+                  <span className="text-[15px] text-muted">{t.productCount(section.products.length)}</span>
+                </span>
+                <ChevronDown
+                  className="size-6 shrink-0 text-forest transition-transform duration-200 group-open:rotate-180"
+                  strokeWidth={2}
+                  aria-hidden="true"
+                />
+              </summary>
+              <div className="px-3 pb-6 pt-2 md:px-6 md:pb-8">
+                {contactSection && <p className="mb-5 max-w-[56ch] text-[17px] text-muted">{t.contactSectionNote}</p>}
+                <div className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-4 lg:gap-x-6 lg:gap-y-10">
+                  {section.products.map((p) => (
+                    <ProductCard
+                      key={p.id}
+                      product={localizeProduct(p, lang)}
+                      contactOnly={isContactOnly(p, section.name)}
+                      phone={settings.phone}
+                    />
+                  ))}
+                </div>
               </div>
-            </section>
+            </details>
           );
         })}
       </div>
@@ -195,9 +205,16 @@ export default async function HomePage() {
           </h2>
           <ul className="mt-6 grid gap-4 md:grid-cols-3 md:gap-6">
             {testimonials[lang].map((q, i) => (
-              <li key={i} className="rounded-[var(--radius-panel)] bg-rose-soft p-6">
-                <blockquote className="text-[17px] leading-[1.7]">{q.text}</blockquote>
-                {q.name && <p className="mt-3 font-semibold text-forest">{q.name}</p>}
+              <li key={i} className="overflow-hidden rounded-[var(--radius-panel)] bg-rose-soft">
+                {q.image && (
+                  <Image src={q.image.src} alt={q.image.alt} width={q.image.width} height={q.image.height} sizes="(min-width: 768px) 380px, 100vw" className="h-auto w-full" />
+                )}
+                {(q.text || q.name) && (
+                  <div className="p-6">
+                    {q.text && <blockquote className="text-[17px] leading-[1.7]">{q.text}</blockquote>}
+                    {q.name && <p className="mt-3 font-semibold text-forest">{q.name}</p>}
+                  </div>
+                )}
               </li>
             ))}
           </ul>

@@ -103,3 +103,26 @@ export function summarizeHours(weekly: BusinessSettings["weekly_hours"], names: 
     hours: `${g.start}–${g.end}`,
   }));
 }
+
+/**
+ * Customers pick a part of the day, not an exact time. Each part is sent as its first open slot
+ * (so `place_order` still checks it against the hours and lead time), and read back from that time.
+ */
+export type DayPart = "morning" | "noon" | "evening";
+
+export function dayPartOf(time: string): DayPart {
+  const m = toMinutes(time.slice(0, 5));
+  if (m < 12 * 60) return "morning";
+  if (m < 16 * 60) return "noon";
+  return "evening";
+}
+
+/** The parts of the day that still have a slot, each with the time to send for it. */
+export function dayParts(slots: string[]): { part: DayPart; time: string }[] {
+  const parts: { part: DayPart; time: string }[] = [];
+  for (const time of slots) {
+    const part = dayPartOf(time);
+    if (!parts.some((p) => p.part === part)) parts.push({ part, time });
+  }
+  return parts;
+}

@@ -6,6 +6,8 @@ import { getProductsByIds } from "@/lib/catalog";
 import { localizeProduct } from "@/i18n/catalog";
 import { getLang } from "@/i18n/server";
 import { deliveryNoteLine, findDeliveryArea } from "@/config/delivery";
+import { dayPartOf } from "@/lib/pickup";
+import { messages } from "@/i18n/messages";
 import type { ActionResult, Product } from "@/lib/types";
 
 const orderInput = z.object({
@@ -56,6 +58,8 @@ export async function placeOrder(input: z.input<typeof orderInput>): Promise<Act
   } else if (lang === "en") {
     lines.push("הזמנה מהאתר באנגלית");
   }
+  // Customers choose morning / midday / evening; the time sent is that part's first open slot.
+  lines.push(`זמן: ${messages.he.checkout.parts[dayPartOf(o.time)]}`);
   if (o.greeting) lines.push(`ברכה למשלוח: ${o.greeting}`);
   const notes = [...lines, o.notes].filter(Boolean).join("\n");
 

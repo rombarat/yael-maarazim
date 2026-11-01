@@ -93,7 +93,7 @@ export function ProductCard({ product, contactOnly = false, phone = "", priority
         </div>
       ) : (
         <div className="mt-2 flex min-h-11 items-center justify-between gap-2">
-          <span className="tabular font-display text-[19px] font-semibold">{productPriceLabel(product, lang)}</span>
+          <span className="tabular whitespace-nowrap font-display text-[17px] font-semibold md:text-[19px]">{productPriceLabel(product, lang)}</span>
           {!soldOut && (
             <button
               type="button"

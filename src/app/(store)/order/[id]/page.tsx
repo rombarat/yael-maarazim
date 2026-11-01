@@ -5,6 +5,7 @@ import { LinkButton } from "@/components/ui/button";
 import { getSettings } from "@/lib/catalog";
 import { getOrder, getOrderSummary } from "@/lib/admin-data";
 import { deliveryFeeFromNotes } from "@/config/delivery";
+import { dayPartOf } from "@/lib/pickup";
 import { formatDateLong, formatPrice, telHref } from "@/lib/format";
 import { localizeSettings, tr } from "@/i18n/catalog";
 import { messages } from "@/i18n/messages";
@@ -44,7 +45,7 @@ export default async function OrderConfirmationPage({ params }: { params: Promis
           <div className="flex justify-between gap-4 py-4">
             <dt className="text-muted">{order.fulfillment_type === "delivery" ? t.delivery : t.pickup}</dt>
             <dd className="text-end font-semibold">
-              {formatDateLong(order.pickup_date, lang)}, <span className="tabular">{order.pickup_time}</span>
+              {formatDateLong(order.pickup_date, lang)}, {messages[lang].checkout.parts[dayPartOf(order.pickup_time)]}
             </dd>
           </div>
           <div className="py-4">

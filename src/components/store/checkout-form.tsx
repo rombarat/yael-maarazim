@@ -13,7 +13,7 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { PageSpinner } from "@/components/ui/spinner";
 import { cartTotals, useCart, useCartHydrated } from "@/lib/cart-store";
 import { formatDateLong, formatPrice, telHref } from "@/lib/format";
-import { getPickupDays } from "@/lib/pickup";
+import { dayPartOf, getPickupDays } from "@/lib/pickup";
 import { isProductError, isSlotError, orderErrorMessage } from "@/lib/order-errors";
 import { fetchCartProducts, placeOrder } from "@/app/(store)/actions";
 import type { BlockedDate, BusinessSettings } from "@/lib/types";
@@ -391,7 +391,7 @@ export function CheckoutForm({ settings, blocked }: { settings: BusinessSettings
         <div className="mt-2 space-y-1 border-t border-line pt-4">
           {date && time && (
             <p className="text-[15px] text-muted">
-              {delivery ? c.delivery : c.pickup}: {formatDateLong(date, lang)}, <span className="tabular">{time}</span>
+              {delivery ? c.delivery : c.pickup}: {formatDateLong(date, lang)}, {c.parts[dayPartOf(time)]}
             </p>
           )}
           {delivery && (
