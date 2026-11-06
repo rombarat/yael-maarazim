@@ -26,7 +26,6 @@ const he = {
   serviceArea: "יבנה, גדרה, אשדוד, נחל שורק, גדרות, חבל יבנה, קרית מלאכי, גן יבנה והאזור",
 
   categoriesNav: "קטגוריות",
-  productCount: (n: number) => (n === 1 ? "מוצר אחד" : `${n} מוצרים`),
   more: "עוד",
   contactSectionNote: "כל סדנה מותאמת לקבוצה ולאירוע. כתבו לי מה חוגגים ונתאם יחד את כל הפרטים.",
 
@@ -246,7 +245,6 @@ const en: Messages = {
   serviceArea: "Yavne, Kerem B'Yavne, Givat Washington, Gedera, Ashdod, Nahal Sorek, Gderot, Kiryat Malakhi, Gan Yavne and the area",
 
   categoriesNav: "Categories",
-  productCount: (n) => (n === 1 ? "1 item" : `${n} items`),
   more: "More",
   contactSectionNote: "Every workshop is tailored to the group and the occasion. Tell me what you're celebrating and we'll plan the details together.",
 

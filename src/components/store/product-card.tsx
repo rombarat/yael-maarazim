@@ -98,7 +98,7 @@ export function ProductCard({ product, contactOnly = false, phone = "", priority
             <button
               type="button"
               onClick={quickAdd}
-              className="flex size-11 shrink-0 items-center justify-center rounded-full bg-brand text-white transition-colors hover:bg-brand-dark active:scale-[0.96]"
+              className="flex size-11 shrink-0 items-center justify-center rounded-full bg-leaf text-leaf-ink transition-colors hover:brightness-95 active:scale-[0.96]"
               aria-label={needsChoice ? t.product.chooseAria(product.name) : t.product.addAria(product.name)}
             >
               <Plus className="size-5" strokeWidth={2.5} />

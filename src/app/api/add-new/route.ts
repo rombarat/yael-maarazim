@@ -1,6 +1,6 @@
 import { timingSafeEqual } from "node:crypto";
 import { getDb } from "@/server/db";
-import { addMissingFromCatalog, readCatalog } from "@/server/seed";
+import { addMissingFromCatalog, readCatalog, renameAndOrderCategories } from "@/server/seed";
 
 /**
  * Adds the categories from seed/catalog.json that the live database doesn't have yet, with their products
@@ -9,7 +9,8 @@ import { addMissingFromCatalog, readCatalog } from "@/server/seed";
  *
  * POST with `Authorization: Bearer <SETUP_TOKEN>`. 404 unless SETUP_TOKEN is set; remove it afterwards.
  * Optional JSON body `{ "enableDelivery": true, "minLeadHours": 24 }` also sets those two settings
- * (the same fields as in the admin).
+ * (the same fields as in the admin); `{ "renameCategories": { "old": "new" }, "orderCategories": true }`
+ * renames categories first and then puts them in the catalog's order.
  */
 export const maxDuration = 60;
 
@@ -24,9 +25,23 @@ export async function POST(request: Request) {
   if (!token) return new Response("Not found", { status: 404 });
   if (!tokenMatches(request.headers.get("authorization"), token)) return new Response("Unauthorized", { status: 401 });
 
-  const body = (await request.json().catch(() => null)) as { enableDelivery?: unknown; minLeadHours?: unknown } | null;
+  const body = (await request.json().catch(() => null)) as {
+    enableDelivery?: unknown;
+    minLeadHours?: unknown;
+    renameCategories?: unknown;
+    orderCategories?: unknown;
+  } | null;
   const db = await getDb();
-  const added = await addMissingFromCatalog(db, await readCatalog());
+  const catalog = await readCatalog();
+  const renames =
+    body?.renameCategories && typeof body.renameCategories === "object"
+      ? Object.fromEntries(Object.entries(body.renameCategories).filter((e): e is [string, string] => typeof e[1] === "string"))
+      : {};
+  // Rename before adding, so a renamed category isn't created a second time under its new name.
+  const categories = Object.keys(renames).length || body?.orderCategories === true ? await renameAndOrderCategories(db, catalog, renames) : null;
+  const added = await addMissingFromCatalog(db, catalog);
+  // New categories go to the end when added; order once more so they land in their place.
+  if (categories) categories.order = (await renameAndOrderCategories(db, catalog, {})).order;
   if (body?.enableDelivery === true) await db.query("update business_settings set delivery_enabled = true where id = 1");
   const hours = body?.minLeadHours;
   if (typeof hours === "number" && Number.isInteger(hours) && hours >= 0 && hours <= 336) {
@@ -35,5 +50,5 @@ export async function POST(request: Request) {
   const [s] = await db.query<{ delivery_enabled: boolean; min_lead_hours: number }>(
     "select delivery_enabled, min_lead_hours from business_settings where id = 1",
   );
-  return Response.json({ ok: true, ...added, deliveryEnabled: s.delivery_enabled, minLeadHours: s.min_lead_hours });
+  return Response.json({ ok: true, ...added, categoryChanges: categories, deliveryEnabled: s.delivery_enabled, minLeadHours: s.min_lead_hours });
 }

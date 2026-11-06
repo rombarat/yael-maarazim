@@ -82,7 +82,7 @@ export function AddToCart({ product, inDialog = false, onAdded }: { product: Pro
         )}
       >
         <QuantityStepper value={quantity} onChange={setQuantity} max={MAX_QTY} label={product.name} labels={t.quantity} />
-        <Button size="lg" className="flex-1 justify-between md:max-w-[340px]" onClick={handleAdd}>
+        <Button size="lg" variant="leaf" className="flex-1 justify-between md:max-w-[340px]" onClick={handleAdd}>
           <span>{t.product.addToCart}</span>
           <span className="tabular">{formatPrice(unitPrice * quantity, lang)}</span>
         </Button>

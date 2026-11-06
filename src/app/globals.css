@@ -8,7 +8,9 @@
   --color-blush: #fdeeee;
   --color-rose: #f7d9df;
   --color-rose-soft: #fcedf0;
-  --color-forest: #2f5233;
+  --color-forest: #3c7a28;
+  --color-leaf: #7bbc63;
+  --color-leaf-ink: #1d3a12;
   --color-success: #4f6b32;
   --color-success-soft: #edf2e4;
   --color-alert: #a3204e;
@@ -50,18 +52,20 @@
 
 /*
  * Storefront theme. Wraps the (store) layout only, so the admin keeps the tokens above.
- * White like the logo badge, the logo's red and black, its pink hearts, the grass the boxes sit on.
+ * White like the logo badge, with the red, green and pink of Yael's printed catalog.
  */
 .store {
   --color-ink: #231f20;
-  --color-brand: #c4262c;
-  --color-brand-dark: #a11d22;
+  /* Yael's catalog red and green (from her Canva catalog), and the pink of her branding. */
+  --color-brand: #a32226;
+  --color-brand-dark: #861a1d;
+  --color-leaf: #7bbc63;
+  --color-leaf-ink: #1d3a12;
   --color-accent: #f2b8b8;
   --color-blush: #fdeeee;
-  /* The pink and dark green Yael's customers know from her current branding. */
   --color-rose: #f7d9df;
   --color-rose-soft: #fcedf0;
-  --color-forest: #2f5233;
+  --color-forest: #3c7a28;
   --color-success: #3f6b2a;
   --color-success-soft: #eaf1e2;
   --color-paper: #ffffff;

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { ChevronDown, Clock, Heart, Phone, Store, Truck } from "lucide-react";
+import { Clock, Heart, Minus, Phone, Plus, Store, Truck } from "lucide-react";
 import { OpenCategoryFromHash } from "@/components/store/open-category-from-hash";
 import { ProductCard } from "@/components/store/product-card";
 import { WhatsAppIcon } from "@/components/ui/social-icons";
@@ -51,7 +51,7 @@ export default async function HomePage() {
           </p>
         )}
         <div className="rounded-[22px] bg-rose px-5 py-8 text-center md:px-12 md:py-12">
-          <h1 className="mx-auto max-w-[24ch] font-display text-[27px] md:max-w-[30ch] font-semibold leading-[1.2] text-forest md:text-[46px] md:leading-[1.15]">
+          <h1 className="mx-auto max-w-[24ch] font-display text-[27px] md:max-w-[30ch] font-semibold leading-[1.2] text-brand md:text-[46px] md:leading-[1.15]">
             {t.intro.title}
           </h1>
           <p className="mx-auto mt-3 max-w-[56ch] text-[17px] text-ink/80 md:text-[20px]">{t.intro.line}</p>
@@ -100,25 +100,19 @@ export default async function HomePage() {
             <details
               key={section.id}
               id={`cat-${section.id}`}
-              className="group scroll-mt-24 rounded-[var(--radius-panel)] bg-rose-soft open:bg-white open:ring-2 open:ring-rose"
+              className="group scroll-mt-24 overflow-hidden rounded-[var(--radius-panel)] bg-white open:ring-2 open:ring-brand"
             >
-              <summary className="flex min-h-[76px] cursor-pointer list-none items-center gap-3 rounded-[var(--radius-panel)] px-3 py-3 transition-colors hover:bg-rose md:gap-4 md:px-4 [&::-webkit-details-marker]:hidden">
-                <span className="relative size-14 shrink-0 overflow-hidden rounded-full bg-white md:size-16">
-                  {section.image && <Image src={section.image} alt="" fill sizes="64px" className="object-cover" />}
+              <summary className="flex min-h-[64px] cursor-pointer list-none items-center gap-3 rounded-[var(--radius-panel)] bg-brand px-3 py-2.5 text-white transition-colors hover:bg-brand-dark group-open:rounded-b-none md:min-h-[72px] md:gap-4 md:px-4 [&::-webkit-details-marker]:hidden">
+                <span className="relative size-11 shrink-0 overflow-hidden rounded-full bg-white ring-2 ring-white md:size-13">
+                  {section.image && <Image src={section.image} alt="" fill sizes="56px" className="object-cover" />}
                 </span>
-                <span className="min-w-0 flex-1">
-                  <span className="block font-display text-[21px] font-semibold leading-tight text-forest md:text-[26px]">
-                    {tr(section.name, lang)}
-                  </span>
-                  <span className="text-[15px] text-muted">{t.productCount(section.products.length)}</span>
+                <span className="min-w-0 flex-1 font-display text-[20px] font-semibold leading-tight md:text-[25px]">
+                  {tr(section.name, lang)}
                 </span>
-                <ChevronDown
-                  className="size-6 shrink-0 text-forest transition-transform duration-200 group-open:rotate-180"
-                  strokeWidth={2}
-                  aria-hidden="true"
-                />
+                <Plus className="size-6 shrink-0 group-open:hidden" strokeWidth={2.5} aria-hidden="true" />
+                <Minus className="hidden size-6 shrink-0 group-open:block" strokeWidth={2.5} aria-hidden="true" />
               </summary>
-              <div className="px-3 pb-6 pt-2 md:px-6 md:pb-8">
+              <div className="px-3 pb-6 pt-5 md:px-6 md:pb-8">
                 {contactSection && <p className="mb-5 max-w-[56ch] text-[17px] text-muted">{t.contactSectionNote}</p>}
                 <div className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-4 lg:gap-x-6 lg:gap-y-10">
                   {section.products.map((p) => (

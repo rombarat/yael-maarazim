@@ -3,7 +3,7 @@ import clsx from "clsx";
 import type { ComponentProps, ReactNode } from "react";
 import { Spinner } from "./spinner";
 
-type Variant = "primary" | "secondary" | "ghost" | "danger" | "light";
+type Variant = "primary" | "secondary" | "ghost" | "danger" | "light" | "leaf";
 type Size = "sm" | "md" | "lg";
 
 const base =
@@ -15,6 +15,8 @@ const variants: Record<Variant, string> = {
   ghost: "text-ink hover:bg-surface",
   danger: "border border-alert/30 bg-white text-alert hover:bg-alert-soft",
   light: "bg-white text-ink hover:bg-surface",
+  /** Storefront "add" buttons, in the green of the owner's catalog. */
+  leaf: "bg-leaf text-leaf-ink hover:brightness-95",
 };
 
 const sizes: Record<Size, string> = {

@@ -205,3 +205,28 @@ export async function seedSampleOrders(db: Db, orders: SeedOrder[]) {
     await db.query("update orders set total = (select coalesce(sum(line_total), 0) from order_items where order_id = $1) where id = $1", [order.id]);
   }
 }
+
+/**
+ * Renames categories (old name → new name; skipped when the old one is gone or the new one exists),
+ * then sets the category order to the catalog's order. Categories the catalog doesn't list keep their
+ * relative order after it. Products, prices and orders are not touched.
+ */
+export async function renameAndOrderCategories(db: Db, catalog: Catalog, renames: Record<string, string>) {
+  const renamed: string[] = [];
+  for (const [from, to] of Object.entries(renames)) {
+    const [{ n }] = await db.query<{ n: number }>("select count(*)::int as n from categories where name = $1", [to]);
+    if (n > 0) continue;
+    const rows = await db.query<{ id: string }>("update categories set name = $2 where name = $1 returning id::text", [from, to]);
+    if (rows.length) renamed.push(`${from} → ${to}`);
+  }
+  const wanted = catalog.categories.map((c) => c.name);
+  const rows = await db.query<{ id: string; name: string }>("select id::text, name from categories order by sort_order, name");
+  const ordered = [
+    ...wanted.flatMap((name) => rows.filter((r) => r.name === name)),
+    ...rows.filter((r) => !wanted.includes(r.name)),
+  ];
+  for (const [i, r] of ordered.entries()) {
+    await db.query("update categories set sort_order = $2 where id = $1", [r.id, i + 1]);
+  }
+  return { renamed, order: ordered.map((r) => r.name) };
+}
