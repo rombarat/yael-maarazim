@@ -138,12 +138,9 @@ export function ProductDialog({ products, categories, settings }: Props) {
                   {settings.phone && (
                     <li className="flex items-center gap-3">
                       <Phone className="size-[18px] shrink-0 text-brand" strokeWidth={1.75} />
-                      <span>
-                        {t.product.questions}{" "}
-                        <a href={telHref(settings.phone)} className="font-semibold underline-offset-4 hover:underline" dir="ltr">
-                          {settings.phone}
-                        </a>
-                      </span>
+                      <a href={telHref(settings.phone)} className="font-semibold underline-offset-4 hover:underline" dir="ltr">
+                        {settings.phone}
+                      </a>
                     </li>
                   )}
                 </ul>
