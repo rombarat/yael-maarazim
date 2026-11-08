@@ -83,7 +83,7 @@ export function ProductCard({ product, contactOnly = false, phone = "", priority
               href={whatsappMessageHref(phone, t.whatsapp.inquiry(product.name))}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex h-11 w-full items-center justify-center gap-2 rounded-full border border-line bg-white px-3 text-[16px] font-semibold text-ink transition-colors hover:border-[#25D366] hover:bg-[#25D366]/10"
+              className="flex h-11 w-full items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-line bg-white px-2 text-[15px] font-semibold md:gap-2 md:px-3 md:text-[16px] text-ink transition-colors hover:border-[#25D366] hover:bg-[#25D366]/10"
               aria-label={t.whatsapp.arrangeAria(product.name)}
             >
               <WhatsAppIcon className="size-5 shrink-0" />

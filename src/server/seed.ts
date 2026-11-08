@@ -116,9 +116,10 @@ export async function seedCatalog(db: Db, catalog: Catalog, { wipeOrders = false
 }
 
 /**
- * Adds the catalog's categories that the database doesn't have yet (matched by name), with their products.
- * Existing categories are left alone, products included, so a product the owner renamed or deleted
- * never comes back. Never deletes or changes anything.
+ * Adds the catalog's categories that the database doesn't have yet (matched by name), with their products,
+ * and fills categories that exist but are still empty with the catalog's products for them.
+ * A category that has products is left alone, so a product the owner renamed or deleted never comes back.
+ * Never deletes or changes anything.
  */
 export async function addMissingFromCatalog(db: Db, catalog: Catalog, { seedDir = path.join(process.cwd(), "seed") } = {}) {
   const images = new Map<string, string>();
@@ -126,6 +127,13 @@ export async function addMissingFromCatalog(db: Db, catalog: Catalog, { seedDir 
     (await db.query<{ id: string; name: string }>("select id::text, name from categories")).map((c) => [c.name, c.id]),
   );
   const added = { categories: [] as string[], products: [] as string[] };
+  const empty = new Set(
+    (
+      await db.query<{ name: string }>(
+        "select c.name from categories c where not exists (select 1 from products p where p.category_id = c.id)",
+      )
+    ).map((c) => c.name),
+  );
 
   for (const [i, c] of catalog.categories.entries()) {
     if (categoryIds.has(c.name)) continue;
@@ -147,7 +155,7 @@ export async function addMissingFromCatalog(db: Db, catalog: Catalog, { seedDir 
   }
 
   for (const p of catalog.products) {
-    if (!added.categories.includes(p.category)) continue;
+    if (!added.categories.includes(p.category) && !empty.has(p.category)) continue;
     const categoryId = categoryIds.get(p.category)!;
     await db.query(
       `insert into products (category_id, name, description, price, unit_label, image_url, is_available, is_featured, tags, variants, sort_order)

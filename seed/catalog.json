@@ -966,6 +966,133 @@
       "description": "עוגיות מקושטות, קאפקייקס מעוצבים, עוגת לבובו, עוגה מעוצבת וקינוחים. בוחרים יחד את הסדנה שמתאימה לקבוצה.",
       "price": 0,
       "image": "cake-ombre-rosettes.webp"
+    },
+    {
+      "category": "מגשי פירות",
+      "name": "סטנדרט קוטר 30",
+      "description": "מגש פירות עגול מפירות העונה, חתוכים ומעוצבים.",
+      "price": 250,
+      "image": "ft-standard-30.webp"
+    },
+    {
+      "category": "מגשי פירות",
+      "name": "סטנדרט קוטר 30 משודרג",
+      "description": "מגש פירות בקוטר 30 ס״מ, בתוספת כוסות יוגורט וגרנולה.",
+      "price": 280,
+      "image": "ft-yogurt-granola.webp"
+    },
+    {
+      "category": "מגשי פירות",
+      "name": "לב מפנק",
+      "description": "מגש פירות בצורת לב, מפירות העונה חתוכים ומעוצבים.",
+      "price": 280,
+      "image": "ft-heart.webp"
+    },
+    {
+      "category": "מגשי פירות",
+      "name": "בינוני קוטר 35",
+      "description": "מגש פירות עגול מפירות העונה, חתוכים ומעוצבים.",
+      "price": 300,
+      "image": "ft-medium-35.webp"
+    },
+    {
+      "category": "מגשי פירות",
+      "name": "גדול קוטר 40",
+      "description": "מגש פירות עגול מפירות העונה, חתוכים ומעוצבים.",
+      "price": 370,
+      "image": "ft-large-40.webp"
+    },
+    {
+      "category": "מגשי פירות",
+      "name": "תפוח מגולף בהפתעה",
+      "description": "תפוח עם כיתוב או ציור מגולף לבחירה: תודה, חג שמח, מזל טוב ועוד.",
+      "price": 25,
+      "unit_label": "יחידה",
+      "image": "ft-carved-apple.webp"
+    },
+    {
+      "category": "מגשי פירות",
+      "name": "מארז פירות בינוני",
+      "description": "מארז פירות העונה חתוכים ומעוצבים, בקופסה.",
+      "price": 0,
+      "image": "ft-box-medium.webp"
+    },
+    {
+      "category": "מגשי פירות",
+      "name": "מארז פירות גדול",
+      "description": "מארז פירות העונה חתוכים ומעוצבים, בקופסה.",
+      "price": 0,
+      "image": "ft-box-large.webp"
+    },
+    {
+      "category": "מגשי פירות",
+      "name": "מארז משולב בינוני",
+      "description": "פירות מעוצבים לצד קינוחים ומאפים מתוקים, בקופסה אחת.",
+      "price": 0,
+      "image": "ft-mixed-medium.webp"
+    },
+    {
+      "category": "מגשי פירות",
+      "name": "מארז משולב גדול",
+      "description": "פירות מעוצבים לצד קינוחים ומאפים מתוקים, בקופסה אחת.",
+      "price": 0,
+      "image": "ft-mixed-large.webp"
+    },
+    {
+      "category": "גיווני פירות",
+      "name": "מארז אישי",
+      "description": "כוס פירות חתוכים, יוגורט וגרנולה במארז אישי.",
+      "price": 0,
+      "image": "fv-personal.webp"
+    },
+    {
+      "category": "גיווני פירות",
+      "name": "כוסות פרי",
+      "description": "כוסות פירות חתוכים במנשא.",
+      "price": 0,
+      "image": "fv-cups.webp"
+    },
+    {
+      "category": "גיווני פירות",
+      "name": "כוסות פרי ושייק",
+      "description": "כוסות פירות חתוכים ובקבוקי שייק פירות, במארז.",
+      "price": 0,
+      "image": "fv-cups-shake.webp"
+    },
+    {
+      "category": "גיווני פירות",
+      "name": "כוסות פרי, יוגורט וקינוחים",
+      "description": "כוסות פירות, כוסות יוגורט וקינוחים אישיים, במארז.",
+      "price": 0,
+      "image": "fv-cups-yogurt-desserts.webp"
+    },
+    {
+      "category": "גיווני פירות",
+      "name": "פירות, שייק וקינוחים",
+      "description": "כוסות פירות, בקבוקי שייק וקינוחים אישיים, במארז.",
+      "price": 0,
+      "image": "fv-fruit-shake-desserts.webp"
+    },
+    {
+      "category": "גיווני פירות",
+      "name": "מגש פירות יבשים",
+      "description": "פירות יבשים ואגוזים מסודרים במגש.",
+      "price": 0,
+      "image": "fv-dried.webp"
+    },
+    {
+      "category": "חגים",
+      "name": "דונאטס לקישוט עצמי",
+      "description": "דונאטס עם ציפויים וסוכריות, לקשט לבד בבית.",
+      "price": 0,
+      "image": "hol-donuts-diy.webp"
+    },
+    {
+      "category": "חגים",
+      "name": "מארז דונאטס",
+      "description": "דונאטס בציפויים צבעוניים. בחנוכה בלבד.",
+      "price": 0,
+      "image": "hol-donuts-hanukkah.webp"
     }
   ],
   "sampleOrders": []

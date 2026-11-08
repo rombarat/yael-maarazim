@@ -262,7 +262,7 @@ const en: Messages = {
   whatsapp: {
     hello: "Hi Yael, I have a question about an order",
     inquiry: (name) => `Hi Yael, I'd like details about: ${name}`,
-    arrange: "Arrange on WhatsApp",
+    arrange: "WhatsApp us",
     arrangeAria: (name) => `Arrange ${name} on WhatsApp`,
   },
 

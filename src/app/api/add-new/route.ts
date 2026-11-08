@@ -3,9 +3,9 @@ import { getDb } from "@/server/db";
 import { addMissingFromCatalog, readCatalog, renameAndOrderCategories } from "@/server/seed";
 
 /**
- * Adds the categories from seed/catalog.json that the live database doesn't have yet, with their products
- * (`npm run db:add-new` for hosts where the database URL can't be copied to a laptop).
- * Existing categories, products, prices and orders are never changed. Safe to call twice.
+ * Adds the categories from seed/catalog.json that the live database doesn't have yet, with their products,
+ * and fills categories that are still empty (`npm run db:add-new` for hosts where the database URL can't be
+ * copied to a laptop). Existing products, prices and orders are never changed. Safe to call twice.
  *
  * POST with `Authorization: Bearer <SETUP_TOKEN>`. 404 unless SETUP_TOKEN is set; remove it afterwards.
  * Optional JSON body `{ "enableDelivery": true, "minLeadHours": 24 }` also sets those two settings
