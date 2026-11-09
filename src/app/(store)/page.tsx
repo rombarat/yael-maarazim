@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Clock, Heart, Minus, Phone, Plus, Store, Truck } from "lucide-react";
 import { OpenCategoryFromHash } from "@/components/store/open-category-from-hash";
 import { ProductCard } from "@/components/store/product-card";
+import { TestimonialsRail } from "@/components/store/testimonials-rail";
 import { WhatsAppIcon } from "@/components/ui/social-icons";
 import { getCategories, getProducts, getSettings } from "@/lib/catalog";
 import { isContactOnly, whatsappMessageHref } from "@/lib/contact";
@@ -197,21 +198,9 @@ export default async function HomePage() {
             {t.testimonialsTitle}
             <Flourish />
           </h2>
-          <ul className="mt-6 grid gap-4 md:grid-cols-3 md:gap-6">
-            {testimonials[lang].map((q, i) => (
-              <li key={i} className="overflow-hidden rounded-[var(--radius-panel)] bg-rose-soft">
-                {q.image && (
-                  <Image src={q.image.src} alt={q.image.alt} width={q.image.width} height={q.image.height} sizes="(min-width: 768px) 380px, 100vw" className="h-auto w-full" />
-                )}
-                {(q.text || q.name) && (
-                  <div className="p-6">
-                    {q.text && <blockquote className="text-[17px] leading-[1.7]">{q.text}</blockquote>}
-                    {q.name && <p className="mt-3 font-semibold text-forest">{q.name}</p>}
-                  </div>
-                )}
-              </li>
-            ))}
-          </ul>
+          <div className="mt-6">
+            <TestimonialsRail items={testimonials[lang]} />
+          </div>
         </section>
       )}
     </>

@@ -214,6 +214,8 @@ const he = {
     ],
   },
   testimonialsTitle: "לקוחות מספרים",
+  testimonialsPrev: "להמלצה הקודמת",
+  testimonialsNext: "להמלצה הבאה",
   pickupAlsoDelivery: (area: string) => `יש גם משלוחים באזור ${area}.`,
   refrigerate: "רוב המוצרים דורשים קירור מרגע האספקה.",
 
@@ -431,6 +433,8 @@ const en: Messages = {
     ],
   },
   testimonialsTitle: "What customers say",
+  testimonialsPrev: "Previous review",
+  testimonialsNext: "Next review",
   pickupAlsoDelivery: (area) => `We also deliver to ${area}.`,
   refrigerate: "Most products need refrigeration from the moment they arrive.",
 
