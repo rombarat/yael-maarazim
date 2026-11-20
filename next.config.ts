@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
     "/api/cron/reset-demo": ["./seed/**/*"],
     "/api/setup": ["./seed/**/*", "./db/schema.sql"],
     "/api/add-new": ["./seed/**/*"],
+    "/api/copy-db": ["./db/schema.sql"],
   },
   images: { formats: ["image/avif", "image/webp"] },
 };
