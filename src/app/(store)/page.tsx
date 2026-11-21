@@ -20,10 +20,11 @@ export default async function HomePage() {
   const settings = localizeSettings(rawSettings, lang);
   const t = messages[lang];
 
-  // Within a category: the owner's order, sold-out items last.
+  // Within a category: the owner's order, sold-out items last (hidden in a seasonal category).
+  const seasonal = new Set(categories.filter((c) => brand.seasonalCategories.includes(c.name)).map((c) => c.id));
   const byCategory = (id: string | null) =>
     products
-      .filter((p) => p.category_id === id)
+      .filter((p) => p.category_id === id && (p.is_available || !seasonal.has(id ?? "")))
       .sort((a, b) => Number(!a.is_available) - Number(!b.is_available) || a.sort_order - b.sort_order);
   const sections: { id: string; name: string; image: string | null; products: Product[] }[] = categories
     .map((c) => {

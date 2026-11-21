@@ -38,6 +38,12 @@ export const brand = {
    */
   contactCategories: ["סדנאות"],
 
+  /**
+   * Seasonal categories: a product here shows only while "זמין להזמנה" is on, and the category shows only while one
+   * of its products does. Yael keeps every holiday's products and switches them on before the holiday, off after it.
+   */
+  seasonalCategories: ["חגים"],
+
   /** Photo for the "about" block at the end of the page (its text is in src/i18n/messages.ts). null hides it. */
   story: {
     image: { src: "/brand/story.webp", alt: "" },
