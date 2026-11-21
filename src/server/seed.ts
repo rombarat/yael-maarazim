@@ -40,6 +40,8 @@ type SyncPlan = {
   moves?: { name: string; from: string; to: string }[];
   renames?: { category: string; from: string; to: string }[];
   remove?: { category: string; name: string }[];
+  /** Photos to replace on existing products; applied only on request (replaceCatalogImages). */
+  images?: { category: string; name: string; image: string }[];
 };
 export type Catalog = {
   settings?: Record<string, unknown>;
@@ -324,4 +326,30 @@ export async function syncCatalog(db: Db, catalog: Catalog, { seedDir = path.joi
     for (const [i, r] of sorted.entries()) await db.query("update products set sort_order = $1 where id = $2", [i + 1, r.id]);
   }
   return done;
+}
+
+/**
+ * Replaces the photo of each product listed in catalog.sync.images with the catalog's file. Run once per change:
+ * every run stores the photos again. The old photo is deleted when no other product uses it.
+ */
+export async function replaceCatalogImages(db: Db, catalog: Catalog, { seedDir = path.join(process.cwd(), "seed") } = {}) {
+  const replaced: string[] = [];
+  for (const r of catalog.sync?.images ?? []) {
+    const [row] = await db.query<{ id: string; image_url: string | null }>(
+      `select p.id::text, p.image_url from products p join categories c on c.id = p.category_id
+        where c.name = $1 and p.name = $2 limit 1`,
+      [r.category, r.name],
+    );
+    if (!row) continue;
+    const url = await storeImage(db, seedDir, r.image, new Map());
+    await db.query("update products set image_url = $1 where id = $2", [url, row.id]);
+    const old = row.image_url?.match(/^\/api\/images\/([0-9a-f-]{36})$/)?.[1];
+    if (old) {
+      const [{ n }] = await db.query<{ n: number }>("select count(*)::int as n from products where image_url = $1", [row.image_url]);
+      const [{ c }] = await db.query<{ c: number }>("select count(*)::int as c from categories where image_url = $1", [row.image_url]);
+      if (n === 0 && c === 0) await db.query("delete from images where id = $1", [old]);
+    }
+    replaced.push(r.name);
+  }
+  return replaced;
 }
