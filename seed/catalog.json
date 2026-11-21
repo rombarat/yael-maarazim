@@ -1532,13 +1532,8 @@
     "images": [
       {
         "category": "קינוחים ועוגות",
-        "name": "כוסיות מוס",
-        "image": "cd-mousse-cups.webp"
-      },
-      {
-        "category": "עיצובי פירות",
-        "name": "סירת פירות",
-        "image": "fruit-boat.webp"
+        "name": "דונאטס חלבי",
+        "image": "cd-donuts.webp"
       }
     ]
   }
