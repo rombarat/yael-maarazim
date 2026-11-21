@@ -33,11 +33,20 @@ type SeedOrder = {
   hours_ago: number;
   items: { product: string; qty: number; variant?: string }[];
 };
+/** A one-off alignment of a live store with a new printed catalog (see syncCatalog). */
+type SyncPlan = {
+  /** Category → product names in catalog order. Only these categories are touched. */
+  order: Record<string, string[]>;
+  moves?: { name: string; from: string; to: string }[];
+  renames?: { category: string; from: string; to: string }[];
+  remove?: { category: string; name: string }[];
+};
 export type Catalog = {
   settings?: Record<string, unknown>;
   categories: { name: string; image?: string }[];
   products: SeedProduct[];
   sampleOrders?: SeedOrder[];
+  sync?: SyncPlan;
 };
 
 const SETTINGS_KEYS = [
@@ -237,4 +246,82 @@ export async function renameAndOrderCategories(db: Db, catalog: Catalog, renames
     await db.query("update categories set sort_order = $2 where id = $1", [r.id, i + 1]);
   }
   return { renamed, order: ordered.map((r) => r.name) };
+}
+
+/**
+ * Brings the categories listed in catalog.sync.order in line with the catalog: moves, renames and removes
+ * the listed products, then for every catalog product in those categories updates its price, size label
+ * and options (adding its photo or description only if it has none) or adds it if missing, and finally
+ * puts the products in catalog order. Products the owner added that the catalog doesn't name are kept,
+ * after the catalog ones. Other categories are not touched. Safe to run twice.
+ */
+export async function syncCatalog(db: Db, catalog: Catalog, { seedDir = path.join(process.cwd(), "seed") } = {}) {
+  const plan = catalog.sync;
+  if (!plan) return null;
+  const images = new Map<string, string>();
+  const cats = new Map(
+    (await db.query<{ id: string; name: string }>("select id::text, name from categories")).map((c) => [c.name, c.id]),
+  );
+  const done = { moved: [] as string[], renamed: [] as string[], removed: [] as string[], updated: [] as string[], added: [] as string[] };
+  const productId = async (category: string, name: string) =>
+    (await db.query<{ id: string }>("select id::text from products where category_id = $1 and name = $2 limit 1", [cats.get(category) ?? null, name]))[0]?.id;
+
+  for (const m of plan.moves ?? []) {
+    const id = await productId(m.from, m.name);
+    if (id && cats.has(m.to) && !(await productId(m.to, m.name))) {
+      await db.query("update products set category_id = $1 where id = $2", [cats.get(m.to), id]);
+      done.moved.push(`${m.name}: ${m.from} → ${m.to}`);
+    }
+  }
+  for (const r of plan.renames ?? []) {
+    const id = await productId(r.category, r.from);
+    if (id && !(await productId(r.category, r.to))) {
+      await db.query("update products set name = $1 where id = $2", [r.to, id]);
+      done.renamed.push(`${r.from} → ${r.to}`);
+    }
+  }
+  for (const r of plan.remove ?? []) {
+    const id = await productId(r.category, r.name);
+    if (id) {
+      // Past orders keep their own copy of the name and price (order_items.product_id becomes null).
+      await db.query("delete from products where id = $1", [id]);
+      done.removed.push(r.name);
+    }
+  }
+
+  for (const [category, names] of Object.entries(plan.order)) {
+    const categoryId = cats.get(category);
+    if (!categoryId) continue;
+    for (const p of catalog.products.filter((x) => x.category === category)) {
+      const [row] = await db.query<{ id: string; image_url: string | null; description: string }>(
+        "select id::text, image_url, description from products where category_id = $1 and name = $2 limit 1",
+        [categoryId, p.name],
+      );
+      if (row) {
+        await db.query(
+          `update products set price = $2, unit_label = $3, variants = $4::jsonb,
+                  image_url = coalesce(image_url, $5), description = case when description = '' then $6 else description end
+            where id = $1`,
+          [row.id, p.price, p.unit_label ?? "", JSON.stringify(p.variants ?? []), row.image_url ? null : await storeImage(db, seedDir, p.image, images), p.description ?? ""],
+        );
+        done.updated.push(p.name);
+      } else {
+        await db.query(
+          `insert into products (category_id, name, description, price, unit_label, image_url, is_available, is_featured, tags, variants, sort_order)
+           values ($1,$2,$3,$4,$5,$6,true,false,$7,$8::jsonb,0)`,
+          [categoryId, p.name, p.description ?? "", p.price, p.unit_label ?? "", await storeImage(db, seedDir, p.image, images), p.tags ?? [], JSON.stringify(p.variants ?? [])],
+        );
+        done.added.push(p.name);
+      }
+    }
+    // Catalog order first, then anything else in the category in its current order.
+    const rows = await db.query<{ id: string; name: string }>(
+      "select id::text, name from products where category_id = $1 order by sort_order, created_at",
+      [categoryId],
+    );
+    const rank = (n: string) => (names.indexOf(n) === -1 ? names.length : names.indexOf(n));
+    const sorted = rows.map((r, i) => ({ ...r, i })).sort((a, b) => rank(a.name) - rank(b.name) || a.i - b.i);
+    for (const [i, r] of sorted.entries()) await db.query("update products set sort_order = $1 where id = $2", [i + 1, r.id]);
+  }
+  return done;
 }

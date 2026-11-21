@@ -1,6 +1,6 @@
 import { timingSafeEqual } from "node:crypto";
 import { getDb } from "@/server/db";
-import { addMissingFromCatalog, readCatalog, renameAndOrderCategories } from "@/server/seed";
+import { addMissingFromCatalog, readCatalog, renameAndOrderCategories, syncCatalog } from "@/server/seed";
 
 /**
  * Adds the categories from seed/catalog.json that the live database doesn't have yet, with their products,
@@ -10,7 +10,8 @@ import { addMissingFromCatalog, readCatalog, renameAndOrderCategories } from "@/
  * POST with `Authorization: Bearer <SETUP_TOKEN>`. 404 unless SETUP_TOKEN is set; remove it afterwards.
  * Optional JSON body `{ "enableDelivery": true, "minLeadHours": 24 }` also sets those two settings
  * (the same fields as in the admin); `{ "renameCategories": { "old": "new" }, "orderCategories": true }`
- * renames categories first and then puts them in the catalog's order.
+ * renames categories first and then puts them in the catalog's order; `{ "syncCatalog": true }` applies the
+ * catalog's `sync` plan (aligns the listed categories with the printed catalog: prices, options, new items).
  */
 export const maxDuration = 60;
 
@@ -30,6 +31,7 @@ export async function POST(request: Request) {
     minLeadHours?: unknown;
     renameCategories?: unknown;
     orderCategories?: unknown;
+    syncCatalog?: unknown;
   } | null;
   const db = await getDb();
   const catalog = await readCatalog();
@@ -42,6 +44,7 @@ export async function POST(request: Request) {
   const added = await addMissingFromCatalog(db, catalog);
   // New categories go to the end when added; order once more so they land in their place.
   if (categories) categories.order = (await renameAndOrderCategories(db, catalog, {})).order;
+  const synced = body?.syncCatalog === true ? await syncCatalog(db, catalog) : null;
   if (body?.enableDelivery === true) await db.query("update business_settings set delivery_enabled = true where id = 1");
   const hours = body?.minLeadHours;
   if (typeof hours === "number" && Number.isInteger(hours) && hours >= 0 && hours <= 336) {
@@ -50,5 +53,5 @@ export async function POST(request: Request) {
   const [s] = await db.query<{ delivery_enabled: boolean; min_lead_hours: number }>(
     "select delivery_enabled, min_lead_hours from business_settings where id = 1",
   );
-  return Response.json({ ok: true, ...added, categoryChanges: categories, deliveryEnabled: s.delivery_enabled, minLeadHours: s.min_lead_hours });
+  return Response.json({ ok: true, ...added, categoryChanges: categories, catalogSync: synced, deliveryEnabled: s.delivery_enabled, minLeadHours: s.min_lead_hours });
 }

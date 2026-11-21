@@ -24,7 +24,7 @@ Stop `npm run dev` before running other `npm run db:*` commands against the loca
 |---|---|
 | `npm run db:setup` | create/upgrade tables (safe to re-run) |
 | `npm run db:seed` | replace the catalog from `seed/` (keeps orders) |
-| `npm run db:add-new` | add the categories from `seed/` that the database doesn't have yet, with their products, and fill categories that are still empty (changes nothing else; on Vercel use `POST /api/add-new`, body `{"enableDelivery":true}` also turns deliveries on) |
+| `npm run db:add-new` | add the categories from `seed/` that the database doesn't have yet, with their products, and fill categories that are still empty (changes nothing else; on Vercel use `POST /api/add-new`, body `{"enableDelivery":true}` also turns deliveries on, `{"syncCatalog":true}` applies the `sync` plan in `seed/catalog.json`) |
 | `npm run db:reset` | catalog + delete orders + sample orders |
 | `npm run admin:create -- <email> <password>` | create an admin or reset its password |
 
