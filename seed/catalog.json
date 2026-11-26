@@ -1534,6 +1534,16 @@
         "category": "קינוחים ועוגות",
         "name": "דונאטס חלבי",
         "image": "cd-donuts.webp"
+      },
+      {
+        "category": "מגשי אירוח",
+        "name": "מגש לחמניות ביס",
+        "image": "h-buns.webp"
+      },
+      {
+        "category": "מגשי אירוח",
+        "name": "מארז מטבלים מחולק",
+        "image": "h-dips.webp"
       }
     ]
   }
